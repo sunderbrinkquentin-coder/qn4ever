@@ -1,0 +1,169 @@
+import { useState } from 'react'
+import RelationshipPrinciples from './components/RelationshipPrinciples'
+import VisitCalendar from './components/VisitCalendar'
+import LoveMessages from './components/LoveMessages'
+import TopicsBoard from './components/TopicsBoard'
+import NextVisit from './components/NextVisit'
+import EventSuggestions from './components/EventSuggestions'
+
+interface Visit {
+  id: string
+  date: string
+  title: string
+  description: string
+  confirmed: boolean
+}
+
+interface Message {
+  id: string
+  content: string
+  sender: string
+  timestamp: string
+  read: boolean
+}
+
+interface Topic {
+  id: string
+  title: string
+  category: string
+}
+
+function App() {
+  const [visits, setVisits] = useState<Visit[]>([])
+  const [messages, setMessages] = useState<Message[]>([])
+  const [topics, setTopics] = useState<Topic[]>([])
+  const [selectedDate, setSelectedDate] = useState<string>('')
+  const [currentTab, setCurrentTab] = useState<'home' | 'principles' | 'calendar' | 'messages' | 'topics'>('home')
+
+  const handleAddVisit = (visit: Omit<Visit, 'id' | 'confirmed'>) => {
+    const newVisit: Visit = {
+      ...visit,
+      id: Date.now().toString(),
+      confirmed: false,
+    }
+    setVisits([...visits, newVisit].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()))
+  }
+
+  const handleConfirmVisit = (visitId: string) => {
+    setVisits(visits.map(v => v.id === visitId ? { ...v, confirmed: true } : v))
+  }
+
+  const handleAddMessage = (message: Omit<Message, 'id' | 'timestamp'>) => {
+    const newMessage: Message = {
+      ...message,
+      id: Date.now().toString(),
+      timestamp: new Date().toLocaleString('de-DE'),
+    }
+    setMessages([...messages, newMessage])
+  }
+
+  const handleMarkMessageAsRead = (messageId: string) => {
+    setMessages(messages.map(m => m.id === messageId ? { ...m, read: true } : m))
+  }
+
+  const handleAddTopic = (topic: Omit<Topic, 'id'>) => {
+    const newTopic: Topic = {
+      ...topic,
+      id: Date.now().toString(),
+    }
+    setTopics([...topics, newTopic])
+  }
+
+  const handleDeleteTopic = (topicId: string) => {
+    setTopics(topics.filter(t => t.id !== topicId))
+  }
+
+  const handleSelectDate = (date: string) => {
+    setSelectedDate(date)
+    setCurrentTab('calendar')
+  }
+
+  const nextVisit = visits.filter(v => new Date(v.date) >= new Date()).sort((a, b) => 
+    new Date(a.date).getTime() - new Date(b.date).getTime()
+  )[0]
+
+  return (
+    <div className="app-container">
+      <header className="app-header">
+        <h1>💕 Unsere Liebe</h1>
+        <p className="app-subtitle">Wir wachsen zusammen</p>
+      </header>
+
+      <nav className="app-nav">
+        <button 
+          className={`nav-btn ${currentTab === 'home' ? 'active' : ''}`}
+          onClick={() => setCurrentTab('home')}
+        >
+          🏠 Startseite
+        </button>
+        <button 
+          className={`nav-btn ${currentTab === 'principles' ? 'active' : ''}`}
+          onClick={() => setCurrentTab('principles')}
+        >
+          ✨ Leitlinien
+        </button>
+        <button 
+          className={`nav-btn ${currentTab === 'calendar' ? 'active' : ''}`}
+          onClick={() => setCurrentTab('calendar')}
+        >
+          📅 Termine
+        </button>
+        <button 
+          className={`nav-btn ${currentTab === 'messages' ? 'active' : ''}`}
+          onClick={() => setCurrentTab('messages')}
+        >
+          💌 Nachrichten
+        </button>
+        <button 
+          className={`nav-btn ${currentTab === 'topics' ? 'active' : ''}`}
+          onClick={() => setCurrentTab('topics')}
+        >
+          📝 Themen
+        </button>
+      </nav>
+
+      <main className="app-main">
+        {currentTab === 'home' && (
+          <div className="home-section">
+            <NextVisit visit={nextVisit} />
+            <EventSuggestions selectedDate={selectedDate} />
+          </div>
+        )}
+        
+        {currentTab === 'principles' && (
+          <RelationshipPrinciples />
+        )}
+        
+        {currentTab === 'calendar' && (
+          <VisitCalendar 
+            visits={visits}
+            onAddVisit={handleAddVisit}
+            onConfirmVisit={handleConfirmVisit}
+          />
+        )}
+        
+        {currentTab === 'messages' && (
+          <LoveMessages 
+            messages={messages}
+            onAddMessage={handleAddMessage}
+            onMarkAsRead={handleMarkMessageAsRead}
+          />
+        )}
+        
+        {currentTab === 'topics' && (
+          <TopicsBoard 
+            topics={topics}
+            onAddTopic={handleAddTopic}
+            onDeleteTopic={handleDeleteTopic}
+          />
+        )}
+      </main>
+
+      <footer className="app-footer">
+        <p>Gebaut mit ❤️ für unsere Liebe</p>
+      </footer>
+    </div>
+  )
+}
+
+export default App

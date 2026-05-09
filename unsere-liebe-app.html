@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unsere Liebe – Beziehungs-App</title>
+    <style>
+        :root {
+            --primary-soft: #f5a8a8;
+            --primary-light: #ffc0cb;
+            --secondary-soft: #ffd9b3;
+            --accent-warm: #ffe4cc;
+            --accent-light: #fff4e6;
+            --white: #ffffff;
+            --light-bg: #fffbf9;
+            --shadow-light: rgba(245, 168, 168, 0.15);
+            --shadow-medium: rgba(245, 168, 168, 0.25);
+            --text-dark: #5a4a48;
+            --text-medium: #8b7975;
+            --text-light: #b8a9a6;
+            --success: #a8d5ba;
+            --warning: #ffc766;
+            --info: #a4c4e6;
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 3rem;
+            --border-radius-sm: 8px;
+            --border-radius-md: 12px;
+            --border-radius-lg: 16px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, var(--light-bg) 0%, #fef5f3 100%);
+            color: var(--text-dark);
+            min-height: 100vh;
+            line-height: 1.6;
+            letter-spacing: 0.3px;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .app-header {
+            background: linear-gradient(135deg, var(--primary-soft) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            padding: var(--spacing-2xl) var(--spacing-lg);
+            text-align: center;
+            box-shadow: 0 8px 24px var(--shadow-medium);
+            animation: slideDown 0.6s ease-out;
+        }
+
+        .app-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-sm);
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .app-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        .app-nav {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-lg);
+            background: rgba(255, 255, 255, 0.5);
+            flex-wrap: wrap;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(245, 168, 168, 0.2);
+            animation: slideDown 0.7s ease-out;
+        }
+
+        .nav-btn {
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: var(--white);
+            border: 2px solid var(--primary-soft);
+            border-radius: var(--border-radius-md);
+            color: var(--text-dark);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(0);
+        }
+
+        .nav-btn:hover {
+            background: var(--primary-light);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow-medium);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, var(--primary-soft) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            border-color: var(--primary-soft);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px var(--shadow-medium);
+        }
+
+        .app-main {
+            flex: 1;
+            padding: var(--spacing-2xl) var(--spacing-lg);
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .app-footer {
+            background: rgba(255, 255, 255, 0.5);
+            color: var(--text-medium);
+            text-align: center;
+            padding: var(--spacing-lg);
+            border-top: 1px solid rgba(245, 168, 168, 0.2);
+            font-size: 0.95rem;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: var(--spacing-2xl);
+            text-align: center;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .section-header h2 {
+            font-size: 2.2rem;
+            color: var(--primary-soft);
+            margin-bottom: var(--spacing-md);
+            font-weight: 700;
+        }
+
+        .section-header p {
+            font-size: 1.05rem;
+            color: var(--text-medium);
+        }
+
+        .home-section {
+            display: grid;
+            gap: var(--spacing-2xl);
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .next-visit-card {
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--accent-warm) 100%);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-2xl);
+            color: var(--white);
+            box-shadow: 0 12px 32px var(--shadow-medium);
+            animation: slideUp 0.6s ease-out;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: var(--spacing-2xl);
+            align-items: center;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.4s ease;
+        }
+
+        .next-visit-card.empty {
+            grid-template-columns: 1fr;
+            text-align: center;
+            justify-items: center;
+        }
+
+        .next-visit-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px var(--shadow-medium);
+        }
+
+        .countdown {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.4);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .countdown-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .countdown-label {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-top: var(--spacing-xs);
+        }
+
+        .visit-info h2 {
+            font-size: 1.8rem;
+            margin-bottom: var(--spacing-md);
+            font-weight: 700;
+        }
+
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .principle-card {
+            background: var(--white);
+            border: 2px solid var(--primary-soft);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(0);
+            box-shadow: 0 4px 12px var(--shadow-light);
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .principle-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 28px var(--shadow-medium);
+            border-color: var(--primary-light);
+            background: linear-gradient(135deg, var(--light-bg) 0%, var(--accent-light) 100%);
+        }
+
+        .principle-card.expanded {
+            background: linear-gradient(135deg, var(--primary-soft) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            transform: scale(1.05);
+        }
+
+        .principle-icon {
+            font-size: 3rem;
+            margin-bottom: var(--spacing-md);
+            display: block;
+            animation: rotate 0.6s ease-out;
+        }
+
+        .principle-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-soft);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .principle-card.expanded .principle-title {
+            color: var(--white);
+        }
+
+        .principle-description {
+            font-size: 0.95rem;
+            color: var(--text-medium);
+            line-height: 1.5;
+        }
+
+        .principle-card.expanded .principle-description {
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .form-card {
+            background: var(--white);
+            border: 2px solid var(--primary-soft);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            box-shadow: 0 4px 12px var(--shadow-light);
+            margin: var(--spacing-xl) 0;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-dark);
+            font-weight: 700;
+            margin-bottom: var(--spacing-sm);
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: var(--spacing-md);
+            border: 2px solid var(--primary-soft);
+            border-radius: var(--border-radius-sm);
+            font-size: 1rem;
+            font-family: inherit;
+            color: var(--text-dark);
+            background: var(--white);
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px var(--shadow-light);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .submit-btn, .add-btn {
+            background: linear-gradient(135deg, var(--primary-soft) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            border: none;
+            padding: var(--spacing-md) var(--spacing-xl);
+            border-radius: var(--border-radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .add-btn {
+            width: auto;
+            margin-bottom: var(--spacing-lg);
+            background: var(--white);
+            color: var(--text-dark);
+            border: 2px solid var(--primary-soft);
+        }
+
+        .submit-btn:hover, .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px var(--shadow-medium);
+        }
+
+        .visits-list, .messages-list {
+            display: grid;
+            gap: var(--spacing-lg);
+        }
+
+        .visit-card {
+            background: var(--white);
+            border-left: 5px solid var(--warning);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            box-shadow: 0 4px 12px var(--shadow-light);
+            animation: slideUp 0.5s ease-out;
+            transition: all 0.4s ease;
+        }
+
+        .visit-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 8px 20px var(--shadow-medium);
+        }
+
+        .visit-card.confirmed {
+            border-left-color: var(--success);
+            background: linear-gradient(135deg, rgba(168, 213, 186, 0.08) 0%, rgba(255, 212, 179, 0.05) 100%);
+        }
+
+        .visit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+        }
+
+        .visit-header h4 {
+            font-size: 1.3rem;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: var(--warning);
+            color: var(--white);
+        }
+
+        .status-badge.confirmed {
+            background: var(--success);
+        }
+
+        .visit-date {
+            color: var(--text-medium);
+            margin-bottom: var(--spacing-md);
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .visit-description {
+            color: var(--text-medium);
+            margin-bottom: var(--spacing-lg);
+            line-height: 1.6;
+        }
+
+        .confirm-btn {
+            background: var(--success);
+            color: var(--white);
+            border: none;
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border-radius: var(--border-radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .confirm-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(168, 213, 186, 0.3);
+        }
+
+        .message-card {
+            background: var(--white);
+            border-left: 4px solid var(--info);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            box-shadow: 0 4px 12px var(--shadow-light);
+            cursor: pointer;
+            animation: slideUp 0.5s ease-out;
+            transition: all 0.4s ease;
+        }
+
+        .message-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 8px 20px var(--shadow-medium);
+        }
+
+        .message-card.unread {
+            border-left-color: var(--warning);
+            background: linear-gradient(135deg, rgba(255, 199, 102, 0.05) 0%, rgba(255, 212, 179, 0.08) 100%);
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+            gap: var(--spacing-md);
+        }
+
+        .message-sender {
+            font-weight: 700;
+            color: var(--primary-soft);
+            font-size: 1.05rem;
+        }
+
+        .message-time {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .message-content {
+            color: var(--text-dark);
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .topic-tile {
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--accent-warm) 100%);
+            color: var(--white);
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            box-shadow: 0 6px 16px var(--shadow-medium);
+            cursor: grab;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: slideUp 0.5s ease-out;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .topic-tile:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 28px var(--shadow-medium);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .topic-text {
+            font-size: 1.05rem;
+            font-weight: 600;
+            line-height: 1.5;
+            margin-right: var(--spacing-lg);
+            position: relative;
+            z-index: 1;
+        }
+
+        .delete-topic-btn {
+            position: absolute;
+            top: var(--spacing-md);
+            right: var(--spacing-md);
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            color: var(--white);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        .delete-topic-btn:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .event-card {
+            background: var(--white);
+            border: 2px solid var(--primary-soft);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            box-shadow: 0 4px 12px var(--shadow-light);
+            transition: all 0.4s ease;
+            animation: fadeInUp 0.5s ease-out;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .event-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 28px var(--shadow-medium);
+            border-color: var(--primary-light);
+            background: linear-gradient(135deg, var(--light-bg) 0%, var(--accent-light) 100%);
+        }
+
+        .category-badge {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--white);
+            padding: var(--spacing-xs) var(--spacing-md);
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .event-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-soft);
+            margin-bottom: var(--spacing-md);
+            line-height: 1.4;
+        }
+
+        .event-description {
+            color: var(--text-medium);
+            margin-bottom: var(--spacing-lg);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            flex: 1;
+        }
+
+        .event-action-btn {
+            background: var(--accent-warm);
+            color: var(--text-dark);
+            border: none;
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .event-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow-light);
+            background: var(--primary-light);
+            color: var(--white);
+        }
+
+        .category-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-2xl);
+            justify-content: center;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .filter-btn {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            background: var(--white);
+            border: 2px solid var(--primary-soft);
+            border-radius: 20px;
+            color: var(--text-dark);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow-light);
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--primary-soft) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            border-color: var(--primary-light);
+            box-shadow: 0 6px 16px var(--shadow-medium);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-2xl);
+            background: linear-gradient(135deg, rgba(245, 168, 168, 0.08) 0%, rgba(255, 212, 179, 0.08) 100%);
+            border: 2px dashed var(--primary-soft);
+            border-radius: var(--border-radius-lg);
+            color: var(--text-medium);
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .empty-state p {
+            font-size: 1.05rem;
+            margin-bottom: var(--spacing-sm);
+            font-weight: 500;
+        }
+
+        .empty-hint {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(-10deg) scale(0.8); opacity: 0; }
+            to { transform: rotate(0) scale(1); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .app-header h1 { font-size: 2rem; }
+            .app-nav { flex-direction: column; }
+            .nav-btn { width: 100%; }
+            .app-main { padding: var(--spacing-lg); }
+            .events-grid, .principle-card:nth-child(n) { grid-template-columns: 1fr; }
+            .topics-grid { grid-template-columns: 1fr; }
+        }
+
+        .hidden { display: none !important; }
+        .group-title {
+            font-size: 1.3rem;
+            color: var(--primary-soft);
+            margin: var(--spacing-lg) 0;
+            font-weight: 700;
+            padding-left: var(--spacing-md);
+            border-left: 4px solid var(--primary-light);
+        }
+
+        .send-btn {
+            width: 100%;
+        }
+
+        .sender-select {
+            width: 100%;
+            padding: var(--spacing-md);
+            border: 2px solid var(--primary-soft);
+            border-radius: var(--border-radius-sm);
+            font-size: 1rem;
+            color: var(--text-dark);
+            background: var(--white);
+            cursor: pointer;
+        }
+
+        .sender-select:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px var(--shadow-light);
+        }
+
+        .message-input {
+            width: 100%;
+            padding: var(--spacing-md);
+            border: 2px solid var(--primary-soft);
+            border-radius: var(--border-radius-sm);
+            font-size: 1rem;
+            font-family: inherit;
+            color: var(--text-dark);
+            resize: vertical;
+            background: var(--white);
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px var(--shadow-light);
+        }
+
+        .topic-input {
+            width: 100%;
+            padding: var(--spacing-md);
+            border: 2px solid var(--primary-soft);
+            border-radius: var(--border-radius-sm);
+            font-size: 1rem;
+            background: var(--white);
+            color: var(--text-dark);
+        }
+
+        .topic-input:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px var(--shadow-light);
+        }
+
+        .category-select {
+            width: 100%;
+            padding: var(--spacing-md);
+            border: 2px solid var(--primary-soft);
+            border-radius: var(--border-radius-sm);
+            font-size: 1rem;
+            color: var(--text-dark);
+            background: var(--white);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>💕 Unsere Liebe</h1>
+            <p class="app-subtitle">Wir wachsen zusammen</p>
+        </header>
+
+        <nav class="app-nav">
+            <button class="nav-btn active" onclick="showTab('home')">🏠 Startseite</button>
+            <button class="nav-btn" onclick="showTab('principles')">✨ Leitlinien</button>
+            <button class="nav-btn" onclick="showTab('calendar')">📅 Termine</button>
+            <button class="nav-btn" onclick="showTab('messages')">💌 Nachrichten</button>
+            <button class="nav-btn" onclick="showTab('topics')">📝 Themen</button>
+        </nav>
+
+        <main class="app-main">
+            <!-- HOME -->
+            <div id="home" class="section active">
+                <div class="home-section">
+                    <div id="next-visit-container"></div>
+                    <div id="events-container"></div>
+                </div>
+            </div>
+
+            <!-- PRINCIPLES -->
+            <div id="principles" class="section">
+                <div class="section-header">
+                    <h2>✨ Unsere Leitlinien</h2>
+                    <p>Die Fundamente unserer wunderschönen Beziehung</p>
+                </div>
+                <div class="principles-grid" id="principles-grid"></div>
+            </div>
+
+            <!-- CALENDAR -->
+            <div id="calendar" class="section">
+                <div class="section-header">
+                    <h2>📅 Unsere Termine & Besuche</h2>
+                    <p>Momente zusammen festhalten</p>
+                </div>
+                <button class="add-btn" onclick="toggleCalendarForm()">+ Neuen Termin hinzufügen</button>
+                <div id="calendar-form" class="form-card hidden">
+                    <div class="form-group">
+                        <label>📅 Datum</label>
+                        <input type="date" id="visitDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>💑 Titel des Besuchs / Dates</label>
+                        <input type="text" id="visitTitle" placeholder="z.B. Besuch in Stuttgart...">
+                    </div>
+                    <div class="form-group">
+                        <label>✍️ Beschreibung</label>
+                        <textarea id="visitDesc" placeholder="Was wir machen wollen..."></textarea>
+                    </div>
+                    <button class="submit-btn" onclick="addVisit()">Termin speichern</button>
+                </div>
+                <div id="visits-container"></div>
+            </div>
+
+            <!-- MESSAGES -->
+            <div id="messages" class="section">
+                <div class="section-header">
+                    <h2>💌 Liebesnachrichten</h2>
+                    <p>Kleine Botschaften der Zuneigung</p>
+                </div>
+                <div class="form-card">
+                    <div class="form-group">
+                        <label>Absender</label>
+                        <select id="messageSender" class="sender-select">
+                            <option>Du</option>
+                            <option>Ich</option>
+                            <option>Wir</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>💌 Deine Nachricht</label>
+                        <textarea id="messageText" class="message-input" placeholder="Schreibe eine liebevolle Nachricht..."></textarea>
+                    </div>
+                    <button class="submit-btn" onclick="addMessage()">✈️ Absenden</button>
+                </div>
+                <div id="messages-container"></div>
+            </div>
+
+            <!-- TOPICS -->
+            <div id="topics" class="section">
+                <div class="section-header">
+                    <h2>📝 Themen-Board</h2>
+                    <p>Was wir noch besprechen und erleben möchten</p>
+                </div>
+                <div class="form-card">
+                    <div class="form-group">
+                        <label>📌 Kategorie</label>
+                        <select id="topicCategory" class="category-select">
+                            <option value="discuss">💬 Besprechen</option>
+                            <option value="dates">💑 Date-Ideen</option>
+                            <option value="future">🚀 Zukunftsziele</option>
+                            <option value="ideas">💡 Ideen</option>
+                            <option value="dreams">✨ Träume</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>✍️ Neues Thema</label>
+                        <input type="text" id="topicText" class="topic-input" placeholder="z.B. Gemeinsamer Urlaub nach Spanien...">
+                    </div>
+                    <button class="add-btn" onclick="addTopic()">+ Hinzufügen</button>
+                </div>
+                <div id="topics-container"></div>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <p>Gebaut mit ❤️ für unsere Liebe</p>
+        </footer>
+    </div>
+
+    <script>
+        // DATA
+        let visits = JSON.parse(localStorage.getItem('visits')) || [];
+        let messages = JSON.parse(localStorage.getItem('messages')) || [];
+        let topics = JSON.parse(localStorage.getItem('topics')) || [];
+
+        const principles = [
+            { icon: '💬', title: 'Vollständigkeit', desc: 'Wir erzählen uns alles (Gutes wie Schwieriges)' },
+            { icon: '🗺️', title: 'Gemeinsame Abenteuer', desc: 'Wir planen gemeinsame Ausflüge und Urlaube' },
+            { icon: '💑', title: 'Regelmäßige Dates', desc: 'Mindestens ein Date pro Monat (virtuell oder persönlich)' },
+            { icon: '💌', title: 'Liebevolle Worte', desc: 'Wir schreiben uns liebevolle Nachrichten' },
+            { icon: '🏠', title: 'Gemeinsame Entscheidungen', desc: 'Entscheidungen über Wohnung und Zukunft treffen wir gemeinsam' },
+            { icon: '🤝', title: 'Gegenseitige Unterstützung', desc: 'Wir unterstützen uns gegenseitig und sind füreinander Priorität 1' },
+            { icon: '🗣️', title: 'Offene Kommunikation', desc: 'Wenn etwas nicht passt, sprechen wir es direkt an' },
+            { icon: '🔍', title: 'Lösungsorientierung', desc: 'Wir suchen Lösungen statt Fehler' },
+            { icon: '👥', title: 'Gegenseitiger Respekt', desc: 'Gegenseitiger Respekt' },
+            { icon: '⚖️', title: 'Gleichberechtigung', desc: 'Jede Meinung zählt gleich viel' },
+            { icon: '⏸️', title: 'Raum für Individualität', desc: 'Zeit für sich ist in Ordnung' },
+            { icon: '👂', title: 'Aktives Zuhören', desc: 'Wir hören einander zu, auch bei kleinen Sorgen' },
+            { icon: '🔒', title: 'Vertrauen', desc: 'Vertrauen ist die Basis' }
+        ];
+
+        const events = [
+            { id: '1', title: 'Fürth Erlebnispark', description: 'Familienfreundlicher Park mit vielen Aktivitäten', category: 'Parks & Natur' },
+            { id: '2', title: 'Besuch im Museum Mensch und Natur', description: 'Interessante Ausstellungen über Geschichte und Kultur', category: 'Kultur' },
+            { id: '3', title: 'Spaziergang durch die Fürther Altstadt', description: 'Romantischer Spaziergang mit Cafés und Restaurants', category: 'Entdeckungen' },
+            { id: '4', title: 'Gemeinsames Picknick im Grünen', description: 'Ein schönes Picknick im Park oder am See genießen', category: 'Picknick & Natur' },
+            { id: '5', title: 'Kino-Abend', description: 'Gemütlicher Kinoabend mit euren Lieblings-Snacks', category: 'Unterhaltung' },
+            { id: '6', title: 'Besuch in der Kunsthalle', description: 'Inspirierende Kunstausstellungen und kulturelle Veranstaltungen', category: 'Kultur' },
+            { id: '7', title: 'Fahrradtour', description: 'Schöne Fahrradstrecken durch Fürth und die Umgebung', category: 'Sport & Outdoor' },
+            { id: '8', title: 'Gemeinsames Kochen & Dinner', description: 'Ein schönes Dinner zusammen kochen und genießen', category: 'Zuhause' },
+            { id: '9', title: 'Wochenmarkt Besuch', description: 'Frische Produkte kaufen und das bunte Treiben genießen', category: 'Shopping' },
+            { id: '10', title: 'Wellness-Erlebnis', description: 'Gemeinsam entspannen und abschalten', category: 'Wellness' }
+        ];
+
+        // NAVIGATION
+        function showTab(tab) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            render();
+        }
+
+        // VISITS
+        function toggleCalendarForm() {
+            document.getElementById('calendar-form').classList.toggle('hidden');
+        }
+
+        function addVisit() {
+            const date = document.getElementById('visitDate').value;
+            const title = document.getElementById('visitTitle').value;
+            const desc = document.getElementById('visitDesc').value;
+            if (date && title) {
+                visits.push({ id: Date.now(), date, title, description: desc, confirmed: false });
+                localStorage.setItem('visits', JSON.stringify(visits));
+                document.getElementById('visitDate').value = '';
+                document.getElementById('visitTitle').value = '';
+                document.getElementById('visitDesc').value = '';
+                toggleCalendarForm();
+                render();
+            }
+        }
+
+        function confirmVisit(id) {
+            visits = visits.map(v => v.id === id ? {...v, confirmed: true} : v);
+            localStorage.setItem('visits', JSON.stringify(visits));
+            render();
+        }
+
+        // MESSAGES
+        function addMessage() {
+            const text = document.getElementById('messageText').value;
+            const sender = document.getElementById('messageSender').value;
+            if (text.trim()) {
+                messages.push({ id: Date.now(), content: text, sender, timestamp: new Date().toLocaleString('de-DE'), read: false });
+                localStorage.setItem('messages', JSON.stringify(messages));
+                document.getElementById('messageText').value = '';
+                render();
+            }
+        }
+
+        function markMessageRead(id) {
+            messages = messages.map(m => m.id === id ? {...m, read: true} : m);
+            localStorage.setItem('messages', JSON.stringify(messages));
+            render();
+        }
+
+        // TOPICS
+        function addTopic() {
+            const text = document.getElementById('topicText').value;
+            const cat = document.getElementById('topicCategory').value;
+            if (text.trim()) {
+                topics.push({ id: Date.now(), title: text, category: cat });
+                localStorage.setItem('topics', JSON.stringify(topics));
+                document.getElementById('topicText').value = '';
+                render();
+            }
+        }
+
+        function deleteTopic(id) {
+            topics = topics.filter(t => t.id !== id);
+            localStorage.setItem('topics', JSON.stringify(topics));
+            render();
+        }
+
+        // RENDER
+        function render() {
+            renderNextVisit();
+            renderEvents();
+            renderPrinciples();
+            renderVisits();
+            renderMessages();
+            renderTopics();
+        }
+
+        function renderNextVisit() {
+            const upcoming = visits.filter(v => new Date(v.date) >= new Date()).sort((a, b) => new Date(a.date) - new Date(b.date));
+            const next = upcoming[0];
+            const container = document.getElementById('next-visit-container');
+            
+            if (!next) {
+                container.innerHTML = `<div class="next-visit-card empty">
+                    <h2>💕 Nächster Besuch</h2>
+                    <p>Noch kein Termin geplant...</p>
+                    <p class="empty-hint">Erstellt einen gemeinsamen Termin!</p>
+                </div>`;
+                return;
+            }
+
+            const daysUntil = Math.ceil((new Date(next.date) - new Date()) / (1000 * 60 * 60 * 24));
+            const dateStr = new Date(next.date).toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+            container.innerHTML = `<div class="next-visit-card ${next.confirmed ? 'confirmed' : 'pending'}">
+                <div class="countdown"><span class="countdown-number">${daysUntil}</span><span class="countdown-label">Tage</span></div>
+                <div class="visit-info">
+                    <h2>💕 ${next.title}</h2>
+                    <p class="visit-when">📅 ${dateStr}</p>
+                    ${next.description ? `<p class="visit-details">${next.description}</p>` : ''}
+                    <span class="status-badge ${next.confirmed ? 'confirmed' : ''}">${next.confirmed ? '✓ Bestätigt' : '⏳ Ausstehend'}</span>
+                </div>
+            </div>`;
+        }
+
+        function renderEvents() {
+            const html = `<div class="section-header">
+                <h2>🎉 Unternehmungs-Ideen für Fürth</h2>
+                <p>Inspirationen für euren nächsten Besuch</p>
+            </div>
+            <div class="category-filters" id="category-filters"></div>
+            <div class="events-grid" id="events-grid"></div>`;
+            
+            document.getElementById('events-container').innerHTML = html;
+            
+            const cats = [...new Set(events.map(e => e.category))];
+            let filterHtml = '<button class="filter-btn active" onclick="filterEvents(\"\")">Alle zeigen</button>';
+            cats.forEach(cat => {
+                const emoji = { 'Parks & Natur': '🌳', 'Kultur': '🎨', 'Entdeckungen': '🗺️', 'Picknick & Natur': '🧺', 'Unterhaltung': '🎬', 'Sport & Outdoor': '🚴', 'Zuhause': '🏠', 'Shopping': '🛍️', 'Wellness': '🧘' }[cat] || '📌';
+                filterHtml += `<button class="filter-btn" onclick="filterEvents('${cat}')">${emoji} ${cat}</button>`;
+            });
+            document.getElementById('category-filters').innerHTML = filterHtml;
+            
+            let eventsHtml = '';
+            events.forEach(e => {
+                const emoji = { 'Parks & Natur': '🌳', 'Kultur': '🎨', 'Entdeckungen': '🗺️', 'Picknick & Natur': '🧺', 'Unterhaltung': '🎬', 'Sport & Outdoor': '🚴', 'Zuhause': '🏠', 'Shopping': '🛍️', 'Wellness': '🧘' }[e.category] || '📌';
+                eventsHtml += `<div class="event-card"><span class="category-badge">${emoji} ${e.category}</span><h3 class="event-title">${e.title}</h3><p class="event-description">${e.description}</p><button class="event-action-btn">💭 Diese Idee speichern</button></div>`;
+            });
+            document.getElementById('events-grid').innerHTML = eventsHtml;
+        }
+
+        function filterEvents(cat) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            const filtered = cat ? events.filter(e => e.category === cat) : events;
+            let html = '';
+            filtered.forEach(e => {
+                const emoji = { 'Parks & Natur': '🌳', 'Kultur': '🎨', 'Entdeckungen': '🗺️', 'Picknick & Natur': '🧺', 'Unterhaltung': '🎬', 'Sport & Outdoor': '🚴', 'Zuhause': '🏠', 'Shopping': '🛍️', 'Wellness': '🧘' }[e.category] || '📌';
+                html += `<div class="event-card"><span class="category-badge">${emoji} ${e.category}</span><h3 class="event-title">${e.title}</h3><p class="event-description">${e.description}</p><button class="event-action-btn">💭 Diese Idee speichern</button></div>`;
+            });
+            document.getElementById('events-grid').innerHTML = html;
+        }
+
+        function renderPrinciples() {
+            let html = '';
+            principles.forEach(p => {
+                html += `<div class="principle-card" onclick="this.classList.toggle('expanded')">
+                    <div class="principle-icon">${p.icon}</div>
+                    <h3 class="principle-title">${p.title}</h3>
+                    <p class="principle-description">${p.desc}</p>
+                </div>`;
+            });
+            document.getElementById('principles-grid').innerHTML = html;
+        }
+
+        function renderVisits() {
+            const upcoming = visits.filter(v => new Date(v.date) >= new Date()).sort((a, b) => new Date(a.date) - new Date(b.date));
+            const past = visits.filter(v => new Date(v.date) < new Date()).sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            let html = '';
+            if (upcoming.length > 0) {
+                html += '<h3 class="group-title">🔜 Kommende Termine</h3><div class="visits-list">';
+                upcoming.forEach(v => {
+                    const dateStr = new Date(v.date).toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                    html += `<div class="visit-card ${v.confirmed ? 'confirmed' : ''}">
+                        <div class="visit-header"><h4>${v.title}</h4><span class="status-badge ${v.confirmed ? 'confirmed' : ''}">${v.confirmed ? '✓ Bestätigt' : '⏳ Ausstehend'}</span></div>
+                        <p class="visit-date">📅 ${dateStr}</p>
+                        ${v.description ? `<p class="visit-description">${v.description}</p>` : ''}
+                        ${!v.confirmed ? `<button class="confirm-btn" onclick="confirmVisit(${v.id})">✓ Bestätigen</button>` : ''}
+                    </div>`;
+                });
+                html += '</div>';
+            }
+            if (past.length > 0) {
+                html += '<h3 class="group-title">📸 Vergangene Momente</h3><div class="visits-list">';
+                past.forEach(v => {
+                    const dateStr = new Date(v.date).toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                    html += `<div class="visit-card past"><div class="visit-header"><h4>${v.title}</h4><span class="status-badge">✓ Vollendet</span></div><p class="visit-date">📅 ${dateStr}</p>${v.description ? `<p class="visit-description">${v.description}</p>` : ''}</div>`;
+                });
+                html += '</div>';
+            }
+            if (visits.length === 0) {
+                html = '<div class="empty-state"><p>Noch keine Termine geplant...</p><p class="empty-hint">Erstellt den ersten gemeinsamen Termin! 💕</p></div>';
+            }
+            document.getElementById('visits-container').innerHTML = html;
+        }
+
+        function renderMessages() {
+            const sorted = [...messages].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            let html = sorted.length === 0 ? '<div class="empty-state"><p>Noch keine Nachrichten...</p><p class="empty-hint">Schreibt euch die erste liebevolle Nachricht! 💕</p></div>' : '';
+            sorted.forEach(m => {
+                html += `<div class="message-card ${m.read ? 'read' : 'unread'}" onclick="markMessageRead(${m.id})">
+                    <div class="message-header"><span class="message-sender">💕 ${m.sender}</span><span class="message-time">${new Date(m.timestamp).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}</span></div>
+                    <p class="message-content">${m.content}</p>
+                </div>`;
+            });
+            document.getElementById('messages-container').innerHTML = html;
+        }
+
+        function renderTopics() {
+            const categories = [
+                { id: 'discuss', label: '💬 Besprechen' },
+                { id: 'dates', label: '💑 Date-Ideen' },
+                { id: 'future', label: '🚀 Zukunftsziele' },
+                { id: 'ideas', label: '💡 Ideen' },
+                { id: 'dreams', label: '✨ Träume' }
+            ];
+
+            let html = topics.length === 0 ? '<div class="empty-state"><p>Noch keine Themen notiert...</p><p class="empty-hint">Sammelt eure Ideen und Träume! 💭</p></div>' : '';
+            
+            categories.forEach(cat => {
+                const catTopics = topics.filter(t => t.category === cat.id);
+                if (catTopics.length > 0) {
+                    html += `<h3 class="group-title">${cat.label}</h3><div class="topics-grid">`;
+                    catTopics.forEach(t => {
+                        html += `<div class="topic-tile"><p class="topic-text">${t.title}</p><button class="delete-topic-btn" onclick="deleteTopic(${t.id})">✕</button></div>`;
+                    });
+                    html += '</div>';
+                }
+            });
+            document.getElementById('topics-container').innerHTML = html;
+        }
+
+        // INIT
+        render();
+    </script>
+</body>
+</html>
