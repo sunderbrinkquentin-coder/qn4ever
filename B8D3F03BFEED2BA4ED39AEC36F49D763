@@ -1,0 +1,261 @@
+﻿import { useEffect, useState } from 'react'
+import RelationshipPrinciples from './components/RelationshipPrinciples'
+import VisitCalendar from './components/VisitCalendar'
+import LoveMessages from './components/LoveMessages'
+import TopicsBoard from './components/TopicsBoard'
+import NextVisit from './components/NextVisit'
+import EventSuggestions from './components/EventSuggestions'
+import WeeklyOverview from './components/WeeklyOverview'
+
+interface Visit {
+  id: string
+  date: string
+  title: string
+  description: string
+  confirmed: boolean
+}
+
+interface Message {
+  id: string
+  content: string
+  sender: string
+  timestamp: string
+  read: boolean
+}
+
+interface Topic {
+  id: string
+  title: string
+  category: string
+}
+
+function App() {
+  // persistent state: load from localStorage where possible
+  const [visits, setVisits] = useState<Visit[]>(() => {
+    try { return JSON.parse(localStorage.getItem('visits') || '[]') } catch { return [] }
+  })
+  const [messages, setMessages] = useState<Message[]>(() => {
+    try { return JSON.parse(localStorage.getItem('messages') || '[]') } catch { return [] }
+  })
+  const [topics, setTopics] = useState<Topic[]>(() => {
+    try { return JSON.parse(localStorage.getItem('topics') || '[]') } catch { return [] }
+  })
+  const [selectedDate, setSelectedDate] = useState<string>('')
+  const [currentTab, setCurrentTab] = useState<'home' | 'principles' | 'calendar' | 'messages' | 'topics'>('home')
+
+  const [user, setUser] = useState<{ firstName: string; partnerName: string } | null>(() => {
+    try { return JSON.parse(localStorage.getItem('user') || 'null') } catch { return null }
+  })
+  const [feedbacks, setFeedbacks] = useState<any[]>(() => {
+    try { return JSON.parse(localStorage.getItem('feedbacks') || '[]') } catch { return [] }
+  })
+
+  const handleAddVisit = (visit: Omit<Visit, 'id' | 'confirmed'>) => {
+    const newVisit: Visit = {
+      ...visit,
+      id: Date.now().toString(),
+      confirmed: false,
+    }
+    const updated = [...visits, newVisit].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    setVisits(updated)
+    localStorage.setItem('visits', JSON.stringify(updated))
+  }
+
+  const handleConfirmVisit = (visitId: string) => {
+    setVisits(visits.map(v => v.id === visitId ? { ...v, confirmed: true } : v))
+  }
+
+  const handleAddMessage = (message: Omit<Message, 'id' | 'timestamp'>) => {
+    const newMessage: Message = {
+      ...message,
+      id: Date.now().toString(),
+      timestamp: new Date().toLocaleString('de-DE'),
+    }
+    const updated = [...messages, newMessage]
+    setMessages(updated)
+    localStorage.setItem('messages', JSON.stringify(updated))
+
+    // Browser notification (local) - will only work in browser and with permission
+    try {
+      if ('Notification' in window) {
+        if (Notification.permission === 'granted') {
+          new Notification(`${newMessage.sender} hat eine Nachricht gesendet`, { body: newMessage.content })
+        } else if (Notification.permission !== 'denied') {
+          Notification.requestPermission().then(perm => {
+            if (perm === 'granted') {
+              new Notification(`${newMessage.sender} hat eine Nachricht gesendet`, { body: newMessage.content })
+            }
+          })
+        }
+      }
+    } catch (e) {
+      // ignore (server-side render or unsupported)
+    }
+  }
+
+  const handleMarkMessageAsRead = (messageId: string) => {
+    setMessages(messages.map(m => m.id === messageId ? { ...m, read: true } : m))
+  }
+
+  const handleAddTopic = (topic: Omit<Topic, 'id'>) => {
+    const newTopic: Topic = {
+      ...topic,
+      id: Date.now().toString(),
+    }
+    const updated = [...topics, newTopic]
+    setTopics(updated)
+    localStorage.setItem('topics', JSON.stringify(updated))
+  }
+
+  const handleDeleteTopic = (topicId: string) => {
+    setTopics(topics.filter(t => t.id !== topicId))
+  }
+
+  const handleSelectDate = (date: string) => {
+    setSelectedDate(date)
+    setCurrentTab('calendar')
+  }
+
+  const nextVisit = visits.filter(v => new Date(v.date) >= new Date()).sort((a, b) => 
+    new Date(a.date).getTime() - new Date(b.date).getTime()
+  )[0]
+
+  // persist feedbacks when changed
+  useEffect(() => {
+    localStorage.setItem('feedbacks', JSON.stringify(feedbacks))
+  }, [feedbacks])
+
+  // persist visits/messages/topics when changed elsewhere
+  useEffect(() => { localStorage.setItem('visits', JSON.stringify(visits)) }, [visits])
+  useEffect(() => { localStorage.setItem('messages', JSON.stringify(messages)) }, [messages])
+  useEffect(() => { localStorage.setItem('topics', JSON.stringify(topics)) }, [topics])
+  useEffect(() => { localStorage.setItem('user', JSON.stringify(user)) }, [user])
+
+  const handleSaveFeedback = (fb: any) => {
+    const updated = [...feedbacks, { ...fb, id: Date.now().toString(), date: new Date().toLocaleDateString('de-DE') }]
+    setFeedbacks(updated)
+    localStorage.setItem('feedbacks', JSON.stringify(updated))
+  }
+
+  // quick logout helper
+  const handleLogout = () => {
+    setUser(null)
+    localStorage.removeItem('user')
+  }
+
+  // if no user, render a simple login overlay
+  if (!user) {
+    return (
+      <div className="app-container" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ background: '#fff', padding: 24, borderRadius: 12, boxShadow: '0 8px 30px rgba(0,0,0,0.12)', width: 420 }}>
+          <h2 style={{ marginBottom: 8 }}>Willkommen</h2>
+          <p style={{ marginBottom: 16 }}>Bitte gib deinen Vornamen und den Vornamen deiner Partnerin/deines Partners ein.</p>
+          <div style={{ display: 'grid', gap: 8 }}>
+            <input placeholder="Dein Vorname" id="loginFirst" style={{ padding: 10, borderRadius: 8 }} />
+            <input placeholder="Partner/in Vorname" id="loginPartner" style={{ padding: 10, borderRadius: 8 }} />
+            <button onClick={() => {
+              const f = (document.getElementById('loginFirst') as HTMLInputElement).value.trim()
+              const p = (document.getElementById('loginPartner') as HTMLInputElement).value.trim()
+              if (!f || !p) return alert('Bitte beide Namen eingeben')
+              setUser({ firstName: f, partnerName: p })
+            }} className="submit-btn">Los geht's</button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="app-container">
+      <header className="app-header">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <h1>💕 Unsere Liebe</h1>
+            <p className="app-subtitle">Wir wachsen zusammen</p>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ fontWeight: 700 }}>{user.firstName} &amp; {user.partnerName}</div>
+            <button onClick={handleLogout} style={{ marginTop: 6 }} className="nav-btn">Abmelden</button>
+          </div>
+        </div>
+      </header>
+
+      <nav className="app-nav">
+        <button 
+          className={`nav-btn ${currentTab === 'home' ? 'active' : ''}`}
+          onClick={() => setCurrentTab('home')}
+        >
+          🏠 Startseite
+        </button>
+        <button 
+          className={`nav-btn ${currentTab === 'principles' ? 'active' : ''}`}
+          onClick={() => setCurrentTab('principles')}
+        >
+          ✨ Leitlinien
+        </button>
+        <button 
+          className={`nav-btn ${currentTab === 'calendar' ? 'active' : ''}`}
+          onClick={() => setCurrentTab('calendar')}
+        >
+          📅 Termine
+        </button>
+        <button 
+          className={`nav-btn ${currentTab === 'messages' ? 'active' : ''}`}
+          onClick={() => setCurrentTab('messages')}
+        >
+          💌 Nachrichten
+        </button>
+        <button 
+          className={`nav-btn ${currentTab === 'topics' ? 'active' : ''}`}
+          onClick={() => setCurrentTab('topics')}
+        >
+          📝 Themen
+        </button>
+      </nav>
+
+      <main className="app-main">
+        {currentTab === 'home' && (
+          <div className="home-section">
+            <NextVisit visit={nextVisit} />
+            <EventSuggestions selectedDate={selectedDate} />
+            <WeeklyOverview visits={visits} messages={messages} feedbacks={feedbacks} />
+          </div>
+        )}
+        
+        {currentTab === 'principles' && (
+          <RelationshipPrinciples />
+        )}
+        
+        {currentTab === 'calendar' && (
+          <VisitCalendar 
+            visits={visits}
+            onAddVisit={handleAddVisit}
+            onConfirmVisit={handleConfirmVisit}
+          />
+        )}
+        
+        {currentTab === 'messages' && (
+          <LoveMessages 
+            messages={messages}
+            onAddMessage={handleAddMessage}
+            onMarkAsRead={handleMarkMessageAsRead}
+          />
+        )}
+        
+        {currentTab === 'topics' && (
+          <TopicsBoard 
+            topics={topics}
+            onAddTopic={handleAddTopic}
+            onDeleteTopic={handleDeleteTopic}
+          />
+        )}
+      </main>
+
+      <footer className="app-footer">
+        <p>Gebaut mit ❤️ für unsere Liebe</p>
+      </footer>
+    </div>
+  )
+}
+
+export default App

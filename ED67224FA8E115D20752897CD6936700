@@ -1,0 +1,51 @@
+﻿import React from 'react'
+
+interface Props {
+  visits: any[]
+  messages: any[]
+  feedbacks: any[]
+}
+
+export default function WeeklyOverview({ visits, messages, feedbacks }: Props) {
+  // very simple weekly aggregation
+  const weekStart = (d: Date) => {
+    const date = new Date(d)
+    const day = date.getDay() || 7
+    date.setDate(date.getDate() - day + 1)
+    date.setHours(0,0,0,0)
+    return date
+  }
+
+  const start = weekStart(new Date())
+  const end = new Date(start)
+  end.setDate(end.getDate() + 7)
+
+  const visitsThisWeek = visits.filter(v => new Date(v.date) >= start && new Date(v.date) < end)
+  const messagesThisWeek = messages.filter(m => new Date(m.timestamp) >= start && new Date(m.timestamp) < end)
+  const feedbacksThisWeek = feedbacks.filter(f => new Date(f.date) >= start && new Date(f.date) < end)
+
+  return (
+    <section className="card">
+      <h3 style={{ color: 'var(--primary)', marginBottom: 12 }}>📅 Wochenübersicht</h3>
+      <p style={{ marginBottom: 8 }}><strong>Besuche diese Woche:</strong> {visitsThisWeek.length}</p>
+      <p style={{ marginBottom: 8 }}><strong>Nachrichten diese Woche:</strong> {messagesThisWeek.length}</p>
+      <p style={{ marginBottom: 8 }}><strong>Feedback-Einträge:</strong> {feedbacksThisWeek.length}</p>
+
+      <div style={{ marginTop: 12 }}>
+        <h4 style={{ marginBottom: 8 }}>Was lief gut?</h4>
+        <ul>
+          {feedbacksThisWeek.map((f,i) => (
+            <li key={i}>{f.q1}</li>
+          ))}
+        </ul>
+
+        <h4 style={{ marginTop: 12, marginBottom: 8 }}>Herausforderungen</h4>
+        <ul>
+          {feedbacksThisWeek.map((f,i) => (
+            <li key={i}>{f.q2}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}

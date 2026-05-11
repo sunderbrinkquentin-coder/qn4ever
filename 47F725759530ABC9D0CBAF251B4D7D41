@@ -717,22 +717,19 @@
     <div id="loginScreen" class="login-screen">
         <div class="login-box">
             <h1>💕</h1>
-            <h2>Unsere Liebe</h2>
-            <p>Wir wachsen zusammen 🌱</p>
+            <h1>Unsere Liebe</h1>
+            <p>Wir wachsen zusammen</p>
             <form class="login-form" onsubmit="login(event)">
                 <div class="form-group">
-                    <label>👤 Dein Vorname</label>
-                    <input type="text" id="firstName" placeholder="z.B. Anna" required autocomplete="off">
+                    <label>Dein Vorname</label>
+                    <input type="text" id="firstName" placeholder="z.B. Anna" required>
                 </div>
                 <div class="form-group">
-                    <label>💑 Partner/in Vorname</label>
-                    <input type="text" id="partnerName" placeholder="z.B. Tom" required autocomplete="off">
+                    <label>Partner/in Vorname</label>
+                    <input type="text" id="partnerName" placeholder="z.B. Tom" required>
                 </div>
-                <button type="submit" class="login-btn">🚀 Beziehung starten</button>
+                <button type="submit" class="login-btn">Beziehung starten 💫</button>
             </form>
-            <div class="login-info">
-                <strong>💡 Tipp:</strong> Diese App speichert eure Daten lokal. Ihr könnt jederzeit wieder auf eure Daten zugreifen!
-            </div>
         </div>
     </div>
 
@@ -758,18 +755,10 @@
             <!-- HOME -->
             <div id="home" class="section active">
                 <div class="section-header">
-                    <h2>Hallo <span id="userNameDisplay">Anna</span>! 👋</h2>
-                    <p id="todayGreeting" style="font-size: 1.15rem; margin-top: 1rem;"></p>
+                    <h2>Willkommen zurück! 💫</h2>
+                    <p id="todayGreeting"></p>
                 </div>
-                <div id="nextVisitContainer" style="margin-top: 2rem;"></div>
-                <div style="background: linear-gradient(135deg, var(--light) 0%, #e8f5f3 100%); border-radius: 15px; padding: 2rem; margin-top: 2rem; text-align: center; border: 2px dashed var(--accent);">
-                    <p style="color: var(--text-light); font-size: 1.05rem; margin-bottom: 1rem;">
-                        💭 Möchte dein/e Partner/in dir eine Nachricht hinterlassen? 
-                    </p>
-                    <button class="btn btn-secondary" onclick="showTab('messages')" style="margin-top: 1rem;">
-                        ✍️ Zu den Nachrichten
-                    </button>
-                </div>
+                <div id="nextVisitContainer"></div>
             </div>
 
             <!-- CALENDAR -->
@@ -879,57 +868,32 @@
         // LOGIN
         function login(e) {
             e.preventDefault();
-            const firstName = document.getElementById('firstName').value.trim();
-            const partnerName = document.getElementById('partnerName').value.trim();
-
-            if (!firstName || !partnerName) {
-                alert('Bitte beide Vornamen eingeben!');
-                return;
-            }
-
+            const firstName = document.getElementById('firstName').value;
+            const partnerName = document.getElementById('partnerName').value;
             user = { firstName, partnerName };
             localStorage.setItem('user', JSON.stringify(user));
-
-            // Clear login form
-            document.getElementById('firstName').value = '';
-            document.getElementById('partnerName').value = '';
-
-            // Show main app
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
             init();
         }
 
         function logout() {
-            if (confirm('Möchtest du dich wirklich abmelden?')) {
-                localStorage.removeItem('user');
-                user = null;
-                document.getElementById('loginScreen').classList.remove('hidden');
-                document.getElementById('mainApp').classList.add('hidden');
-                document.getElementById('firstName').value = '';
-                document.getElementById('partnerName').value = '';
-            }
+            localStorage.removeItem('user');
+            user = null;
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('firstName').value = '';
+            document.getElementById('partnerName').value = '';
         }
 
         // INIT
         function init() {
-            document.getElementById('greeting').textContent = `Hallo ${user.firstName}! 👋`;
-            document.getElementById('userNameDisplay').textContent = user.firstName;
-            const today = new Date();
-            document.getElementById('todayGreeting').textContent = `${today.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}`;
+            document.getElementById('greeting').textContent = `Willkommen, ${user.firstName}! 👋`;
+            document.getElementById('todayGreeting').textContent = `Heute, ${new Date().toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' })}`;
             renderHome();
             renderSuggestions();
             renderMessages();
             renderCalendar();
-            showWelcomeMessage();
-        }
-
-        function showWelcomeMessage() {
-            const lastLogin = localStorage.getItem('lastLogin');
-            const today = new Date().toDateString();
-            if (lastLogin !== today) {
-                localStorage.setItem('lastLogin', today);
-            }
         }
 
         // TAB NAVIGATION

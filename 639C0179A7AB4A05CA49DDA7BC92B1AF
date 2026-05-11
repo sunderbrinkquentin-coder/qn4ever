@@ -222,33 +222,31 @@
             padding: 1.5rem;
             background: var(--white);
             flex-wrap: wrap;
-            border-bottom: 2px solid var(--light);
+            border-bottom: 1px solid #e0e0e0;
         }
 
         .nav-btn {
-            padding: 0.8rem 1.8rem;
+            padding: 0.75rem 1.5rem;
             background: var(--light);
             border: 2px solid transparent;
-            border-radius: 12px;
+            border-radius: 8px;
             color: var(--text-dark);
-            font-weight: 700;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.4s ease;
+            transition: all 0.3s ease;
             font-size: 0.95rem;
         }
 
         .nav-btn:hover {
             background: var(--accent);
             color: var(--white);
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-sm);
+            transform: translateY(-2px);
         }
 
         .nav-btn.active {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background: var(--primary);
             color: var(--white);
             border-color: var(--secondary);
-            box-shadow: var(--shadow-sm);
         }
 
         .app-main {
@@ -341,35 +339,20 @@
         }
 
         .next-visit-highlight {
-            background: linear-gradient(135deg, var(--accent) 0%, #4db8b3 100%);
-            border-radius: 20px;
-            padding: 2.5rem;
+            background: linear-gradient(135deg, var(--accent) 0%, #c19a63 100%);
+            border-radius: 15px;
+            padding: 2rem;
             color: var(--white);
             display: grid;
             grid-template-columns: auto 1fr;
-            gap: 2.5rem;
+            gap: 2rem;
             align-items: center;
             margin-bottom: 2rem;
-            box-shadow: 0 15px 40px rgba(27, 122, 107, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            animation: slideUp 0.8s ease-out;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .next-visit-highlight::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
         }
 
         .countdown-circle {
-            width: 140px;
-            height: 140px;
+            width: 120px;
+            height: 120px;
             background: rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             display: flex;
@@ -377,37 +360,27 @@
             align-items: center;
             justify-content: center;
             border: 3px solid rgba(255, 255, 255, 0.4);
-            animation: pulse 2.5s ease-in-out infinite;
-            position: relative;
-            z-index: 1;
+            animation: pulse 2s ease-in-out infinite;
         }
 
         .countdown-number {
-            font-size: 2.8rem;
-            font-weight: 800;
+            font-size: 2.5rem;
+            font-weight: 700;
         }
 
         .countdown-label {
-            font-size: 0.9rem;
-            opacity: 0.95;
-            font-weight: 600;
-        }
-
-        .visit-details {
-            position: relative;
-            z-index: 1;
+            font-size: 0.85rem;
+            opacity: 0.9;
         }
 
         .visit-details h3 {
-            font-size: 2rem;
-            margin-bottom: 0.8rem;
-            font-weight: 800;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
         }
 
         .visit-details p {
             opacity: 0.95;
-            margin-bottom: 0.6rem;
-            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
         }
 
         /* MESSAGE SUGGESTIONS */
@@ -668,7 +641,7 @@
         @keyframes slideUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
@@ -676,23 +649,9 @@
             }
         }
 
-        @keyframes bounce {
-            0% {
-                transform: scale(0.8);
-                opacity: 0;
-            }
-            50% {
-                transform: scale(1.05);
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.08); }
+            50% { transform: scale(1.05); }
         }
 
         /* RESPONSIVE */
@@ -717,22 +676,19 @@
     <div id="loginScreen" class="login-screen">
         <div class="login-box">
             <h1>💕</h1>
-            <h2>Unsere Liebe</h2>
-            <p>Wir wachsen zusammen 🌱</p>
+            <h1>Unsere Liebe</h1>
+            <p>Wir wachsen zusammen</p>
             <form class="login-form" onsubmit="login(event)">
                 <div class="form-group">
-                    <label>👤 Dein Vorname</label>
-                    <input type="text" id="firstName" placeholder="z.B. Anna" required autocomplete="off">
+                    <label>Dein Vorname</label>
+                    <input type="text" id="firstName" placeholder="z.B. Anna" required>
                 </div>
                 <div class="form-group">
-                    <label>💑 Partner/in Vorname</label>
-                    <input type="text" id="partnerName" placeholder="z.B. Tom" required autocomplete="off">
+                    <label>Partner/in Vorname</label>
+                    <input type="text" id="partnerName" placeholder="z.B. Tom" required>
                 </div>
-                <button type="submit" class="login-btn">🚀 Beziehung starten</button>
+                <button type="submit" class="login-btn">Beziehung starten 💫</button>
             </form>
-            <div class="login-info">
-                <strong>💡 Tipp:</strong> Diese App speichert eure Daten lokal. Ihr könnt jederzeit wieder auf eure Daten zugreifen!
-            </div>
         </div>
     </div>
 
@@ -758,18 +714,10 @@
             <!-- HOME -->
             <div id="home" class="section active">
                 <div class="section-header">
-                    <h2>Hallo <span id="userNameDisplay">Anna</span>! 👋</h2>
-                    <p id="todayGreeting" style="font-size: 1.15rem; margin-top: 1rem;"></p>
+                    <h2>Willkommen zurück! 💫</h2>
+                    <p id="todayGreeting"></p>
                 </div>
-                <div id="nextVisitContainer" style="margin-top: 2rem;"></div>
-                <div style="background: linear-gradient(135deg, var(--light) 0%, #e8f5f3 100%); border-radius: 15px; padding: 2rem; margin-top: 2rem; text-align: center; border: 2px dashed var(--accent);">
-                    <p style="color: var(--text-light); font-size: 1.05rem; margin-bottom: 1rem;">
-                        💭 Möchte dein/e Partner/in dir eine Nachricht hinterlassen? 
-                    </p>
-                    <button class="btn btn-secondary" onclick="showTab('messages')" style="margin-top: 1rem;">
-                        ✍️ Zu den Nachrichten
-                    </button>
-                </div>
+                <div id="nextVisitContainer"></div>
             </div>
 
             <!-- CALENDAR -->
@@ -879,57 +827,32 @@
         // LOGIN
         function login(e) {
             e.preventDefault();
-            const firstName = document.getElementById('firstName').value.trim();
-            const partnerName = document.getElementById('partnerName').value.trim();
-
-            if (!firstName || !partnerName) {
-                alert('Bitte beide Vornamen eingeben!');
-                return;
-            }
-
+            const firstName = document.getElementById('firstName').value;
+            const partnerName = document.getElementById('partnerName').value;
             user = { firstName, partnerName };
             localStorage.setItem('user', JSON.stringify(user));
-
-            // Clear login form
-            document.getElementById('firstName').value = '';
-            document.getElementById('partnerName').value = '';
-
-            // Show main app
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
             init();
         }
 
         function logout() {
-            if (confirm('Möchtest du dich wirklich abmelden?')) {
-                localStorage.removeItem('user');
-                user = null;
-                document.getElementById('loginScreen').classList.remove('hidden');
-                document.getElementById('mainApp').classList.add('hidden');
-                document.getElementById('firstName').value = '';
-                document.getElementById('partnerName').value = '';
-            }
+            localStorage.removeItem('user');
+            user = null;
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('firstName').value = '';
+            document.getElementById('partnerName').value = '';
         }
 
         // INIT
         function init() {
-            document.getElementById('greeting').textContent = `Hallo ${user.firstName}! 👋`;
-            document.getElementById('userNameDisplay').textContent = user.firstName;
-            const today = new Date();
-            document.getElementById('todayGreeting').textContent = `${today.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}`;
+            document.getElementById('greeting').textContent = `Willkommen, ${user.firstName}! 👋`;
+            document.getElementById('todayGreeting').textContent = `Heute, ${new Date().toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' })}`;
             renderHome();
             renderSuggestions();
             renderMessages();
             renderCalendar();
-            showWelcomeMessage();
-        }
-
-        function showWelcomeMessage() {
-            const lastLogin = localStorage.getItem('lastLogin');
-            const today = new Date().toDateString();
-            if (lastLogin !== today) {
-                localStorage.setItem('lastLogin', today);
-            }
         }
 
         // TAB NAVIGATION

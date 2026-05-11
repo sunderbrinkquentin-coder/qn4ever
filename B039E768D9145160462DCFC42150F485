@@ -17,6 +17,14 @@ interface Props {
 export default function LoveMessages({ messages, onAddMessage, onMarkAsRead }: Props) {
   const [newMessage, setNewMessage] = useState('')
   const [senderName, setSenderName] = useState('Du')
+  const [quickReply, setQuickReply] = useState('')
+
+  const suggestions = [
+    'Warum liebst du mich? ❤️',
+    'Was war unser schönster Moment? ✨',
+    'Wobei kann ich dich diese Woche unterstützen? 🤝',
+    'Was wünschst du dir von mir? 🌟',
+  ]
 
   const handleSendMessage = () => {
     if (newMessage.trim()) {
@@ -55,6 +63,15 @@ export default function LoveMessages({ messages, onAddMessage, onMarkAsRead }: P
             <option>Ich</option>
             <option>Wir</option>
           </select>
+        </div>
+
+        <div className="form-group">
+          <label>Vorschläge</label>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            {suggestions.map(s => (
+              <button key={s} className="filter-btn" onClick={() => setNewMessage(s)}>{s}</button>
+            ))}
+          </div>
         </div>
 
         <div className="form-group">

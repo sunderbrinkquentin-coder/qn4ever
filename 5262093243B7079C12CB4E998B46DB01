@@ -879,36 +879,22 @@
         // LOGIN
         function login(e) {
             e.preventDefault();
-            const firstName = document.getElementById('firstName').value.trim();
-            const partnerName = document.getElementById('partnerName').value.trim();
-
-            if (!firstName || !partnerName) {
-                alert('Bitte beide Vornamen eingeben!');
-                return;
-            }
-
+            const firstName = document.getElementById('firstName').value;
+            const partnerName = document.getElementById('partnerName').value;
             user = { firstName, partnerName };
             localStorage.setItem('user', JSON.stringify(user));
-
-            // Clear login form
-            document.getElementById('firstName').value = '';
-            document.getElementById('partnerName').value = '';
-
-            // Show main app
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
             init();
         }
 
         function logout() {
-            if (confirm('Möchtest du dich wirklich abmelden?')) {
-                localStorage.removeItem('user');
-                user = null;
-                document.getElementById('loginScreen').classList.remove('hidden');
-                document.getElementById('mainApp').classList.add('hidden');
-                document.getElementById('firstName').value = '';
-                document.getElementById('partnerName').value = '';
-            }
+            localStorage.removeItem('user');
+            user = null;
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('firstName').value = '';
+            document.getElementById('partnerName').value = '';
         }
 
         // INIT
