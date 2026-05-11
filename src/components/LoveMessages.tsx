@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 interface Message {
   id: string
@@ -12,17 +12,36 @@ interface Props {
   messages: Message[]
   onAddMessage: (message: Omit<Message, 'id' | 'timestamp'>) => void
   onMarkAsRead: (messageId: string) => void
+  currentUser: string
+  partnerName: string
 }
 
-export default function LoveMessages({ messages, onAddMessage, onMarkAsRead }: Props) {
+export default function LoveMessages({ messages, onAddMessage, onMarkAsRead, currentUser, partnerName }: Props) {
   const [newMessage, setNewMessage] = useState('')
-  const [senderName, setSenderName] = useState('Du')
+  const [quickReply, setQuickReply] = useState('')
+  const [reminder, setReminder] = useState(false)
+
+  const suggestions = [
+    'Warum liebst du mich? ❤️',
+    'Was war unser schönster Moment? ✨',
+    'Wobei kann ich dich diese Woche unterstützen? 🤝',
+    'Was wünschst du dir von mir? 🌟',
+  ]
+
+  useEffect(() => {
+    const lastMessage = messages.find(m => m.sender === currentUser)
+    if (!lastMessage || new Date(lastMessage.timestamp).getDay() !== new Date().getDay()) {
+      setReminder(true)
+    } else {
+      setReminder(false)
+    }
+  }, [messages, currentUser])
 
   const handleSendMessage = () => {
     if (newMessage.trim()) {
       onAddMessage({
         content: newMessage,
-        sender: senderName,
+        sender: currentUser,
         read: false,
       })
       setNewMessage('')
@@ -43,18 +62,20 @@ export default function LoveMessages({ messages, onAddMessage, onMarkAsRead }: P
         {unreadCount > 0 && <span className="unread-badge">{unreadCount} neu</span>}
       </div>
 
+      {reminder && (
+        <div className="reminder">
+          <p>💡 Denk daran, diese Woche eine Nachricht an {partnerName} zu schreiben!</p>
+        </div>
+      )}
+
       <div className="message-compose form-card">
         <div className="form-group">
-          <label>Absender</label>
-          <select 
-            value={senderName} 
-            onChange={(e) => setSenderName(e.target.value)}
-            className="sender-select"
-          >
-            <option>Du</option>
-            <option>Ich</option>
-            <option>Wir</option>
-          </select>
+          <label>Vorschläge</label>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            {suggestions.map(s => (
+              <button key={s} className="filter-btn" onClick={() => setNewMessage(s)}>{s}</button>
+            ))}
+          </div>
         </div>
 
         <div className="form-group">
@@ -94,7 +115,6 @@ export default function LoveMessages({ messages, onAddMessage, onMarkAsRead }: P
             <div
               key={msg.id}
               className={`message-card ${msg.read ? 'read' : 'unread'}`}
-              onClick={() => !msg.read && onMarkAsRead(msg.id)}
             >
               <div className="message-header">
                 <span className="message-sender">💕 {msg.sender}</span>
@@ -104,7 +124,13 @@ export default function LoveMessages({ messages, onAddMessage, onMarkAsRead }: P
                 })}</span>
               </div>
               <p className="message-content">{msg.content}</p>
-              {!msg.read && <div className="unread-indicator">Neue Nachricht</div>}
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
+                {!msg.read ? (
+                  <button className="confirm-btn" onClick={() => onMarkAsRead(msg.id)}>Als gelesen markieren</button>
+                ) : (
+                  <div style={{ color: 'var(--text-light)', alignSelf: 'center' }}>Gelesen</div>
+                )}
+              </div>
             </div>
           ))
         )}

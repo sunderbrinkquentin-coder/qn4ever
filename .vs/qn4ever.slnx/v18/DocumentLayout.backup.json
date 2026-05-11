@@ -74,8 +74,12 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 7,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 15,
@@ -155,9 +159,9 @@
               "Title": "styles.css",
               "DocumentMoniker": "C:\\Users\\sunde\\source\\repos\\qn4ever\\src\\styles.css",
               "RelativeDocumentMoniker": "src\\styles.css",
-              "ToolTip": "C:\\Users\\sunde\\source\\repos\\qn4ever\\src\\styles.css",
-              "RelativeToolTip": "src\\styles.css",
-              "ViewState": "AgIAADcCAAAAAAAAAAAYwDwCAAAAAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\sunde\\source\\repos\\qn4ever\\src\\styles.css*",
+              "RelativeToolTip": "src\\styles.css*",
+              "ViewState": "AgIAAOMBAAAAAAAAAAAYwEACAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
               "WhenOpened": "2026-05-09T19:17:46.411Z",
               "EditorCaption": ""

@@ -5,26 +5,40 @@ interface Visit {
   date: string
   title: string
   description: string
+  duration: string
   confirmed: boolean
+  proposedChanges?: {
+    date?: string
+    title?: string
+    description?: string
+    duration?: string
+  }
 }
 
 interface Props {
   visits: Visit[]
   onAddVisit: (visit: Omit<Visit, 'id' | 'confirmed'>) => void
   onConfirmVisit: (visitId: string) => void
+  onProposeChange: (visitId: string, changes: Partial<Visit>) => void
 }
 
-export default function VisitCalendar({ visits, onAddVisit, onConfirmVisit }: Props) {
-  const [formData, setFormData] = useState({ date: '', title: '', description: '' })
+export default function VisitCalendar({ visits, onAddVisit, onConfirmVisit, onProposeChange }: Props) {
+  const [formData, setFormData] = useState({ date: '', title: '', description: '', duration: '' })
   const [showForm, setShowForm] = useState(false)
+  const [proposedChanges, setProposedChanges] = useState<Partial<Visit>>({})
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (formData.date && formData.title) {
+    if (formData.date && formData.title && formData.duration) {
       onAddVisit(formData)
-      setFormData({ date: '', title: '', description: '' })
+      setFormData({ date: '', title: '', description: '', duration: '' })
       setShowForm(false)
     }
+  }
+
+  const handleProposeChange = (visitId: string) => {
+    onProposeChange(visitId, proposedChanges)
+    setProposedChanges({})
   }
 
   const sortedVisits = [...visits].sort((a, b) => 
@@ -78,6 +92,17 @@ export default function VisitCalendar({ visits, onAddVisit, onConfirmVisit }: Pr
           </div>
 
           <div className="form-group">
+            <label>⏳ Dauer (z.B. 2 Stunden, 1 Tag)</label>
+            <input
+              type="text"
+              placeholder="z.B. 2 Stunden, 1 Tag"
+              value={formData.duration}
+              onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+              required
+            />
+          </div>
+
+          <div className="form-group">
             <label>✍️ Beschreibung</label>
             <textarea
               placeholder="Was wir machen wollen, Pläne, besondere Wünsche..."
@@ -105,7 +130,46 @@ export default function VisitCalendar({ visits, onAddVisit, onConfirmVisit }: Pr
                     </span>
                   </div>
                   <p className="visit-date">📅 {formatDate(visit.date)}</p>
+                  <p className="visit-duration">⏳ {visit.duration}</p>
                   {visit.description && <p className="visit-description">{visit.description}</p>}
+
+                  {visit.proposedChanges && (
+                    <div className="proposed-changes">
+                      <h5>Änderungsvorschläge:</h5>
+                      {visit.proposedChanges.date && <p>📅 Neues Datum: {formatDate(visit.proposedChanges.date)}</p>}
+                      {visit.proposedChanges.title && <p>💑 Neuer Titel: {visit.proposedChanges.title}</p>}
+                      {visit.proposedChanges.description && <p>✍️ Neue Beschreibung: {visit.proposedChanges.description}</p>}
+                      {visit.proposedChanges.duration && <p>⏳ Neue Dauer: {visit.proposedChanges.duration}</p>}
+                    </div>
+                  )}
+
+                  <div className="propose-change-form">
+                    <h5>Änderung vorschlagen:</h5>
+                    <input
+                      type="text"
+                      placeholder="Neuer Titel"
+                      value={proposedChanges.title || ''}
+                      onChange={(e) => setProposedChanges({ ...proposedChanges, title: e.target.value })}
+                    />
+                    <input
+                      type="date"
+                      value={proposedChanges.date || ''}
+                      onChange={(e) => setProposedChanges({ ...proposedChanges, date: e.target.value })}
+                    />
+                    <textarea
+                      placeholder="Neue Beschreibung"
+                      value={proposedChanges.description || ''}
+                      onChange={(e) => setProposedChanges({ ...proposedChanges, description: e.target.value })}
+                    ></textarea>
+                    <input
+                      type="text"
+                      placeholder="Neue Dauer"
+                      value={proposedChanges.duration || ''}
+                      onChange={(e) => setProposedChanges({ ...proposedChanges, duration: e.target.value })}
+                    />
+                    <button onClick={() => handleProposeChange(visit.id)}>Vorschlag senden</button>
+                  </div>
+
                   {!visit.confirmed && (
                     <button
                       className="confirm-btn"
@@ -131,6 +195,7 @@ export default function VisitCalendar({ visits, onAddVisit, onConfirmVisit }: Pr
                     <span className="status-badge past">✓ Vollendet</span>
                   </div>
                   <p className="visit-date">📅 {formatDate(visit.date)}</p>
+                  <p className="visit-duration">⏳ {visit.duration}</p>
                   {visit.description && <p className="visit-description">{visit.description}</p>}
                 </div>
               ))}

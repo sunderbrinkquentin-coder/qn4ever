@@ -1,0 +1,1150 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unsere Liebe – Relationship App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1b7a6b;
+            --secondary: #2d9f8d;
+            --accent: #5ecfc9;
+            --light: #f0f7f6;
+            --white: #ffffff;
+            --text-dark: #1a1a1a;
+            --text-light: #5a5a5a;
+            --success: #2d9f8d;
+            --warning: #5ecfc9;
+            --shadow: 0 12px 32px rgba(27, 122, 107, 0.15);
+            --shadow-sm: 0 4px 12px rgba(27, 122, 107, 0.08);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--light) 0%, #eeebe7 100%);
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        /* LOGIN SCREEN */
+        .login-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .login-box {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(27, 122, 107, 0.2);
+            max-width: 450px;
+            text-align: center;
+            animation: slideUp 0.8s ease-out;
+            transform: scale(1);
+        }
+
+        .login-box h1 {
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+            animation: bounce 1s ease-out;
+        }
+
+        .login-box h2 {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .login-box p {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+
+        .form-group label {
+            text-align: left;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 0.95rem;
+        }
+
+        .form-group input {
+            padding: 1rem 1.2rem;
+            border: 2px solid var(--accent);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.4s ease;
+            background: var(--light);
+        }
+
+        .form-group input::placeholder {
+            color: #aaa;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--white);
+            box-shadow: 0 0 0 4px rgba(29, 122, 107, 0.1);
+            transform: scale(1.02);
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--white);
+            border: none;
+            padding: 1.1rem;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            font-size: 1.05rem;
+            margin-top: 0.5rem;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(27, 122, 107, 0.25);
+        }
+
+        .login-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .login-info {
+            background: linear-gradient(135deg, rgba(29, 122, 107, 0.05) 0%, rgba(93, 207, 201, 0.05) 100%);
+            border-left: 4px solid var(--accent);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+            text-align: left;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* MAIN APP */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .app-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--white);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .app-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .app-header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+
+        .user-greeting {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.75rem 1.5rem;
+            border-radius: 20px;
+            color: var(--white);
+            backdrop-filter: blur(10px);
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.3);
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-left: 1rem;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .app-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: var(--white);
+            flex-wrap: wrap;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .nav-btn {
+            padding: 0.8rem 1.8rem;
+            background: var(--light);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            color: var(--text-dark);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn:hover {
+            background: var(--accent);
+            color: var(--white);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--white);
+            border-color: var(--secondary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .app-main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header p {
+            color: var(--text-light);
+            font-size: 1.05rem;
+        }
+
+        /* CALENDAR */
+        .calendar-container {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .calendar-header h3 {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: var(--light);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: var(--text-dark);
+        }
+
+        .calendar-day:hover {
+            background: var(--accent);
+            color: var(--white);
+            transform: scale(1.05);
+        }
+
+        .calendar-day.selected {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .calendar-day.has-event {
+            border: 2px solid var(--success);
+        }
+
+        .next-visit-highlight {
+            background: linear-gradient(135deg, var(--accent) 0%, #4db8b3 100%);
+            border-radius: 20px;
+            padding: 2.5rem;
+            color: var(--white);
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 2.5rem;
+            align-items: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 15px 40px rgba(27, 122, 107, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            animation: slideUp 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .next-visit-highlight::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+        }
+
+        .countdown-circle {
+            width: 140px;
+            height: 140px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid rgba(255, 255, 255, 0.4);
+            animation: pulse 2.5s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+        }
+
+        .countdown-number {
+            font-size: 2.8rem;
+            font-weight: 800;
+        }
+
+        .countdown-label {
+            font-size: 0.9rem;
+            opacity: 0.95;
+            font-weight: 600;
+        }
+
+        .visit-details {
+            position: relative;
+            z-index: 1;
+        }
+
+        .visit-details h3 {
+            font-size: 2rem;
+            margin-bottom: 0.8rem;
+            font-weight: 800;
+        }
+
+        .visit-details p {
+            opacity: 0.95;
+            margin-bottom: 0.6rem;
+            font-size: 1.05rem;
+        }
+
+        /* MESSAGE SUGGESTIONS */
+        .message-suggestions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .suggestion-card {
+            background: var(--white);
+            border: 2px solid var(--secondary);
+            border-radius: 15px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .suggestion-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: var(--shadow);
+        }
+
+        .suggestion-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .suggestion-text {
+            color: var(--text-dark);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            min-height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .suggestion-btn {
+            background: var(--secondary);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .suggestion-btn:hover {
+            background: var(--primary);
+        }
+
+        /* MESSAGE BOARD */
+        .message-board {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .message-note {
+            background: linear-gradient(135deg, #fff9e6 0%, #f5f3f0 100%);
+            border-left: 4px solid var(--accent);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .message-note:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .message-sender {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .message-time {
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        .message-content {
+            color: var(--text-dark);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+
+        /* FORM */
+        .form-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--secondary);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background: var(--accent);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background: #c19a63;
+        }
+
+        /* FEEDBACK SECTION */
+        .feedback-container {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .feedback-question {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--light);
+            border-left: 4px solid var(--secondary);
+            border-radius: 8px;
+        }
+
+        .feedback-question h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .feedback-question textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--secondary);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            min-height: 100px;
+            transition: all 0.3s ease;
+        }
+
+        .feedback-question textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
+        }
+
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            background: var(--light);
+            border-radius: 15px;
+            color: var(--text-light);
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .app-header h1 { font-size: 1.8rem; }
+            .app-nav { flex-direction: column; }
+            .nav-btn { width: 100%; }
+            .app-main { padding: 1rem; }
+            .next-visit-highlight { grid-template-columns: 1fr; text-align: center; }
+            .countdown-circle { margin: 0 auto; }
+            .form-grid { grid-template-columns: 1fr; }
+            .message-suggestions { grid-template-columns: 1fr; }
+            .user-greeting { position: static; margin-bottom: 1rem; }
+            .logout-btn { margin-left: 0; margin-top: 1rem; }
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <!-- LOGIN SCREEN -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-box">
+            <h1>💕</h1>
+            <h1>Unsere Liebe</h1>
+            <p>Wir wachsen zusammen</p>
+            <form class="login-form" onsubmit="login(event)">
+                <div class="form-group">
+                    <label>Dein Vorname</label>
+                    <input type="text" id="firstName" placeholder="z.B. Anna" required>
+                </div>
+                <div class="form-group">
+                    <label>Partner/in Vorname</label>
+                    <input type="text" id="partnerName" placeholder="z.B. Tom" required>
+                </div>
+                <button type="submit" class="login-btn">Beziehung starten 💫</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN APP -->
+    <div id="mainApp" class="app-container hidden">
+        <div class="app-header">
+            <div class="user-greeting">
+                <span id="greeting">Willkommen!</span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+            <h1>💕 Unsere Liebe</h1>
+            <p>Wir wachsen zusammen</p>
+        </div>
+
+        <nav class="app-nav">
+            <button class="nav-btn active" onclick="showTab('home')">🏠 Startseite</button>
+            <button class="nav-btn" onclick="showTab('calendar')">📅 Kalender</button>
+            <button class="nav-btn" onclick="showTab('messages')">💌 Nachrichten</button>
+            <button class="nav-btn" onclick="showTab('feedback')">📊 Feedback</button>
+        </nav>
+
+        <main class="app-main">
+            <!-- HOME -->
+            <div id="home" class="section active">
+                <div class="section-header">
+                    <h2>Willkommen zurück! 💫</h2>
+                    <p id="todayGreeting"></p>
+                </div>
+                <div id="nextVisitContainer"></div>
+            </div>
+
+            <!-- CALENDAR -->
+            <div id="calendar" class="section">
+                <div class="section-header">
+                    <h2>📅 Unser Kalender</h2>
+                    <p>Momente zusammen festhalten</p>
+                </div>
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <h3 id="monthYear"></h3>
+                        <div>
+                            <button class="btn btn-secondary" onclick="prevMonth()" style="margin-right: 0.5rem;">← Zurück</button>
+                            <button class="btn btn-secondary" onclick="nextMonth()">Vor →</button>
+                        </div>
+                    </div>
+                    <div class="calendar" id="calendar"></div>
+                </div>
+
+                <div class="form-card">
+                    <h3 style="color: var(--primary); margin-bottom: 1.5rem;">Besuch eintragen</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Datum</label>
+                            <input type="date" id="visitDate">
+                        </div>
+                        <div class="form-group">
+                            <label>Titel</label>
+                            <input type="text" id="visitTitle" placeholder="z.B. Gemeinsamer Ausflug">
+                        </div>
+                        <div class="form-group">
+                            <label>Beschreibung</label>
+                            <textarea id="visitDesc" placeholder="Was wollen wir machen?"></textarea>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="addVisit()" style="margin-top: 1rem;">📌 Termin speichern</button>
+                </div>
+
+                <div id="visitsContainer" style="margin-top: 2rem;"></div>
+            </div>
+
+            <!-- MESSAGES -->
+            <div id="messages" class="section">
+                <div class="section-header">
+                    <h2>💌 Liebesnachrichten</h2>
+                    <p>Ideen für schöne Botschaften</p>
+                </div>
+
+                <h3 style="color: var(--primary); margin: 2rem 0 1.5rem 0; text-align: center;">💡 Nachrichtenvorschläge</h3>
+                <div class="message-suggestions" id="suggestions"></div>
+
+                <h3 style="color: var(--primary); margin: 3rem 0 1.5rem 0; text-align: center;">💬 Eure Nachrichten</h3>
+                <div class="message-board" id="messageBoard"></div>
+            </div>
+
+            <!-- FEEDBACK -->
+            <div id="feedback" class="section">
+                <div class="section-header">
+                    <h2>📊 Wöchentliches Feedback</h2>
+                    <p>Wie war diese Woche für dich?</p>
+                </div>
+
+                <div class="feedback-container">
+                    <div class="feedback-question">
+                        <h4>✨ Was fandest du diese Woche besonders schön?</h4>
+                        <textarea id="feedback1" placeholder="Schreibe hier hin..."></textarea>
+                    </div>
+                    <div class="feedback-question">
+                        <h4>🌊 Wo hattest du Herausforderungen?</h4>
+                        <textarea id="feedback2" placeholder="Schreibe hier hin..."></textarea>
+                    </div>
+                    <div class="feedback-question">
+                        <h4>🤝 Wie kann ich dich besser unterstützen?</h4>
+                        <textarea id="feedback3" placeholder="Schreibe hier hin..."></textarea>
+                    </div>
+                    <div class="feedback-question">
+                        <h4>🧠 Gibt es Themen die dich beschäftigen, aber du lieber alleine ausmachen willst?</h4>
+                        <textarea id="feedback4" placeholder="Schreibe hier hin..."></textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveFeedback()" style="width: 100%;">💾 Feedback speichern</button>
+                </div>
+
+                <div id="feedbackHistory" style="margin-top: 2rem;"></div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // DATA
+        let user = JSON.parse(localStorage.getItem('user')) || null;
+        let visits = JSON.parse(localStorage.getItem('visits')) || [];
+        let messages = JSON.parse(localStorage.getItem('messages')) || [];
+        let feedbacks = JSON.parse(localStorage.getItem('feedbacks')) || [];
+        let currentMonth = new Date();
+
+        const suggestions = [
+            { emoji: '❤️', text: 'Warum liebst du mich?' },
+            { emoji: '✨', text: 'Was war dein schönstes Ereignis mit mir?' },
+            { emoji: '🌙', text: 'Was bedeutet mir deine Liebe?' },
+            { emoji: '💭', text: 'Was magst du besonders an mir?' },
+            { emoji: '🎉', text: 'Was möchte ich zusammen mit dir erleben?' },
+            { emoji: '🌟', text: 'Wann hast du mich zum ersten Mal geliebt?' },
+            { emoji: '💫', text: 'Welcher gemeinsame Moment bleibt für immer in meinem Herzen?' },
+            { emoji: '🎯', text: 'Wie siehst du unsere Zukunft zusammen?' }
+        ];
+
+        // LOGIN
+        function login(e) {
+            e.preventDefault();
+            const firstName = document.getElementById('firstName').value;
+            const partnerName = document.getElementById('partnerName').value;
+            user = { firstName, partnerName };
+            localStorage.setItem('user', JSON.stringify(user));
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            init();
+        }
+
+        function logout() {
+            localStorage.removeItem('user');
+            user = null;
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('firstName').value = '';
+            document.getElementById('partnerName').value = '';
+        }
+
+        // INIT
+        function init() {
+            document.getElementById('greeting').textContent = `Willkommen, ${user.firstName}! 👋`;
+            document.getElementById('todayGreeting').textContent = `Heute, ${new Date().toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' })}`;
+            renderHome();
+            renderSuggestions();
+            renderMessages();
+            renderCalendar();
+        }
+
+        // TAB NAVIGATION
+        function showTab(tab) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            if (tab === 'calendar') renderCalendar();
+            if (tab === 'feedback') renderFeedback();
+            if (tab === 'messages') renderMessages();
+        }
+
+        // HOME
+        function renderHome() {
+            const upcoming = visits.filter(v => new Date(v.date) >= new Date()).sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+            
+            if (!upcoming) {
+                document.getElementById('nextVisitContainer').innerHTML = `<div class="empty-state"><p>Noch kein Besuch geplant 😢</p><p>Plant jetzt euren nächsten gemeinsamen Moment!</p></div>`;
+                return;
+            }
+
+            const days = Math.ceil((new Date(upcoming.date) - new Date()) / (1000 * 60 * 60 * 24));
+            const dateStr = new Date(upcoming.date).toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+            document.getElementById('nextVisitContainer').innerHTML = `
+                <div class="next-visit-highlight">
+                    <div class="countdown-circle">
+                        <div class="countdown-number">${days}</div>
+                        <div class="countdown-label">Tage</div>
+                    </div>
+                    <div class="visit-details">
+                        <h3>${upcoming.title}</h3>
+                        <p>📅 ${dateStr}</p>
+                        ${upcoming.description ? `<p>${upcoming.description}</p>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        // CALENDAR
+        function renderCalendar() {
+            const year = currentMonth.getFullYear();
+            const month = currentMonth.getMonth();
+            
+            document.getElementById('monthYear').textContent = currentMonth.toLocaleDateString('de-DE', { month: 'long', year: 'numeric' });
+            
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            
+            let html = '';
+            const weekdays = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+            weekdays.forEach(day => {
+                html += `<div style="text-align: center; font-weight: 600; color: var(--primary); padding: 0.5rem;">${day}</div>`;
+            });
+            
+            for (let i = 1; i < firstDay; i++) html += '<div></div>';
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const hasVisit = visits.some(v => v.date === dateStr);
+                html += `<div class="calendar-day ${hasVisit ? 'has-event' : ''}">${day}</div>`;
+            }
+            
+            document.getElementById('calendar').innerHTML = html;
+            renderVisits();
+        }
+
+        function prevMonth() {
+            currentMonth.setMonth(currentMonth.getMonth() - 1);
+            renderCalendar();
+        }
+
+        function nextMonth() {
+            currentMonth.setMonth(currentMonth.getMonth() + 1);
+            renderCalendar();
+        }
+
+        function addVisit() {
+            const date = document.getElementById('visitDate').value;
+            const title = document.getElementById('visitTitle').value;
+            const desc = document.getElementById('visitDesc').value;
+            
+            if (date && title) {
+                visits.push({ id: Date.now(), date, title, description: desc });
+                localStorage.setItem('visits', JSON.stringify(visits));
+                document.getElementById('visitDate').value = '';
+                document.getElementById('visitTitle').value = '';
+                document.getElementById('visitDesc').value = '';
+                renderCalendar();
+                renderHome();
+            }
+        }
+
+        function renderVisits() {
+            const sorted = [...visits].sort((a, b) => new Date(a.date) - new Date(b.date));
+            let html = '<h3 style="color: var(--primary); margin: 2rem 0 1.5rem 0;">📌 Eingetragene Besuche</h3>';
+            
+            if (sorted.length === 0) {
+                html += '<div class="empty-state"><p>Keine Besuche geplant</p></div>';
+            } else {
+                sorted.forEach(v => {
+                    const dateStr = new Date(v.date).toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
+                    html += `
+                        <div class="message-note" style="margin-bottom: 1rem;">
+                            <div class="message-header">
+                                <span style="color: var(--primary); font-weight: 700;">${v.title}</span>
+                                <button class="delete-btn" onclick="deleteVisit(${v.id})">Löschen</button>
+                            </div>
+                            <p style="color: var(--text-light); margin-bottom: 0.5rem;">📅 ${dateStr}</p>
+                            ${v.description ? `<p>${v.description}</p>` : ''}
+                        </div>
+                    `;
+                });
+            }
+            
+            const container = document.getElementById('visitsContainer');
+            if (container) container.innerHTML = html;
+        }
+
+        function deleteVisit(id) {
+            visits = visits.filter(v => v.id !== id);
+            localStorage.setItem('visits', JSON.stringify(visits));
+            renderCalendar();
+            renderHome();
+        }
+
+        // MESSAGES
+        function renderSuggestions() {
+            let html = '';
+            suggestions.forEach((s, i) => {
+                html += `
+                    <div class="suggestion-card">
+                        <div class="suggestion-icon">${s.emoji}</div>
+                        <div class="suggestion-text">${s.text}</div>
+                        <button class="suggestion-btn" onclick="useSuggestion('${s.text}')">Benutzen</button>
+                    </div>
+                `;
+            });
+            document.getElementById('suggestions').innerHTML = html;
+        }
+
+        function useSuggestion(text) {
+            const message = {
+                id: Date.now(),
+                content: text,
+                sender: user.firstName,
+                timestamp: new Date().toLocaleString('de-DE')
+            };
+            messages.push(message);
+            localStorage.setItem('messages', JSON.stringify(messages));
+            renderMessages();
+        }
+
+        function renderMessages() {
+            const sorted = [...messages].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            let html = '';
+            
+            if (sorted.length === 0) {
+                html = '<div class="empty-state" style="grid-column: 1 / -1;"><p>Noch keine Nachrichten 💌</p></div>';
+            } else {
+                sorted.forEach(m => {
+                    html += `
+                        <div class="message-note">
+                            <div class="message-header">
+                                <span class="message-sender">${m.sender}</span>
+                                <span class="message-time">${new Date(m.timestamp).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}</span>
+                            </div>
+                            <p class="message-content">${m.content}</p>
+                            <button class="delete-btn" onclick="deleteMessage(${m.id})">Löschen</button>
+                        </div>
+                    `;
+                });
+            }
+            const board = document.getElementById('messageBoard');
+            if (board) board.innerHTML = html;
+        }
+
+        function deleteMessage(id) {
+            messages = messages.filter(m => m.id !== id);
+            localStorage.setItem('messages', JSON.stringify(messages));
+            renderMessages();
+        }
+
+        // FEEDBACK
+        function saveFeedback() {
+            const feedback = {
+                id: Date.now(),
+                date: new Date().toLocaleDateString('de-DE'),
+                week: `KW ${getWeekNumber(new Date())}`,
+                q1: document.getElementById('feedback1').value,
+                q2: document.getElementById('feedback2').value,
+                q3: document.getElementById('feedback3').value,
+                q4: document.getElementById('feedback4').value
+            };
+
+            if (!feedback.q1 && !feedback.q2 && !feedback.q3 && !feedback.q4) {
+                alert('Bitte fülle mindestens eine Frage aus!');
+                return;
+            }
+
+            feedbacks.push(feedback);
+            localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
+            
+            document.getElementById('feedback1').value = '';
+            document.getElementById('feedback2').value = '';
+            document.getElementById('feedback3').value = '';
+            document.getElementById('feedback4').value = '';
+            
+            renderFeedback();
+            alert('Danke für dein Feedback! 💕');
+        }
+
+        function renderFeedback() {
+            const sorted = [...feedbacks].sort((a, b) => new Date(b.date) - new Date(a.date));
+            let html = '<h3 style="color: var(--primary); margin: 2rem 0 1.5rem 0; text-align: center;">📋 Feedback-Historie</h3>';
+            
+            if (sorted.length === 0) {
+                html += '<div class="empty-state"><p>Noch kein Feedback eingereicht</p></div>';
+            } else {
+                sorted.forEach(f => {
+                    html += `
+                        <div class="message-note">
+                            <p style="color: var(--primary); font-weight: 700; margin-bottom: 1rem;">${f.week} - ${f.date}</p>
+                            ${f.q1 ? `<p><strong>✨ Schön:</strong> ${f.q1}</p>` : ''}
+                            ${f.q2 ? `<p><strong>🌊 Herausforderungen:</strong> ${f.q2}</p>` : ''}
+                            ${f.q3 ? `<p><strong>🤝 Unterstützung:</strong> ${f.q3}</p>` : ''}
+                            ${f.q4 ? `<p><strong>🧠 Private Themen:</strong> ${f.q4}</p>` : ''}
+                        </div>
+                    `;
+                });
+            }
+            
+            const container = document.getElementById('feedbackHistory');
+            if (container) container.innerHTML = html;
+        }
+
+        function getWeekNumber(d) {
+            d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+            d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+            var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            var weekNumber = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+            return weekNumber;
+        }
+
+        // CHECK LOGIN
+        if (user) {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            init();
+        }
+    </script>
+</body>
+</html>

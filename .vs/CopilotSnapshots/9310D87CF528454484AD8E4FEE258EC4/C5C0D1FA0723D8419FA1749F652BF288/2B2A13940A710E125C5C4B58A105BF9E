@@ -1,0 +1,114 @@
+﻿import { useState } from 'react'
+
+interface Message {
+  id: string
+  content: string
+  sender: string
+  timestamp: string
+  read: boolean
+}
+
+interface Props {
+  messages: Message[]
+  onAddMessage: (message: Omit<Message, 'id' | 'timestamp'>) => void
+  onMarkAsRead: (messageId: string) => void
+}
+
+export default function LoveMessages({ messages, onAddMessage, onMarkAsRead }: Props) {
+  const [newMessage, setNewMessage] = useState('')
+  const [senderName, setSenderName] = useState('Du')
+
+  const handleSendMessage = () => {
+    if (newMessage.trim()) {
+      onAddMessage({
+        content: newMessage,
+        sender: senderName,
+        read: false,
+      })
+      setNewMessage('')
+    }
+  }
+
+  const sortedMessages = [...messages].sort((a, b) => 
+    new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+  )
+
+  const unreadCount = messages.filter(m => !m.read).length
+
+  return (
+    <section className="messages-section">
+      <div className="section-header">
+        <h2>💌 Liebesnachrichten</h2>
+        <p>Kleine Botschaften der Zuneigung</p>
+        {unreadCount > 0 && <span className="unread-badge">{unreadCount} neu</span>}
+      </div>
+
+      <div className="message-compose form-card">
+        <div className="form-group">
+          <label>Absender</label>
+          <select 
+            value={senderName} 
+            onChange={(e) => setSenderName(e.target.value)}
+            className="sender-select"
+          >
+            <option>Du</option>
+            <option>Ich</option>
+            <option>Wir</option>
+          </select>
+        </div>
+
+        <div className="form-group">
+          <label>💌 Deine Nachricht</label>
+          <textarea
+            placeholder="Schreibe eine liebevolle Nachricht..."
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter' && e.ctrlKey) {
+                handleSendMessage()
+              }
+            }}
+            rows={3}
+            className="message-input"
+          ></textarea>
+          <div className="form-hint">Tipp: Ctrl+Enter zum Absenden</div>
+        </div>
+
+        <button 
+          onClick={handleSendMessage}
+          disabled={!newMessage.trim()}
+          className="send-btn"
+        >
+          ✈️ Absenden
+        </button>
+      </div>
+
+      <div className="messages-list">
+        {sortedMessages.length === 0 ? (
+          <div className="empty-state">
+            <p>Noch keine Nachrichten...</p>
+            <p className="empty-hint">Schreibt euch die erste liebevolle Nachricht! 💕</p>
+          </div>
+        ) : (
+          sortedMessages.map((msg) => (
+            <div
+              key={msg.id}
+              className={`message-card ${msg.read ? 'read' : 'unread'}`}
+              onClick={() => !msg.read && onMarkAsRead(msg.id)}
+            >
+              <div className="message-header">
+                <span className="message-sender">💕 {msg.sender}</span>
+                <span className="message-time">{new Date(msg.timestamp).toLocaleTimeString('de-DE', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}</span>
+              </div>
+              <p className="message-content">{msg.content}</p>
+              {!msg.read && <div className="unread-indicator">Neue Nachricht</div>}
+            </div>
+          ))
+        )}
+      </div>
+    </section>
+  )
+}

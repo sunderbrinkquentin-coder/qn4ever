@@ -18,6 +18,7 @@ const categories = [
   { id: 'future', label: '🚀 Zukunftsziele', emoji: '🚀' },
   { id: 'ideas', label: '💡 Ideen', emoji: '💡' },
   { id: 'dreams', label: '✨ Träume', emoji: '✨' },
+  { id: 'private', label: '🔒 Beschäftigt mich, will ich aber alleine klären', emoji: '🔒' },
 ]
 
 export default function TopicsBoard({ topics, onAddTopic, onDeleteTopic }: Props) {

@@ -14,76 +14,42 @@ interface Props {
 const suggestedEvents: Event[] = [
   {
     id: '1',
-    title: 'Fürth Erlebnispark',
-    description: 'Familienfreundlicher Park mit vielen Aktivitäten und schönen Spazierweg',
-    category: 'Parks & Natur',
+    title: 'Romantisches Picknick am See',
+    description: 'Packt eure Lieblingssnacks ein und genießt die Zeit am Wasser.',
+    category: 'Natur',
   },
   {
     id: '2',
-    title: 'Besuch im Museum Mensch und Natur',
-    description: 'Interessante Ausstellungen über Geschichte und Kultur',
-    category: 'Kultur',
+    title: 'Sternenhimmel beobachten',
+    description: 'Legt euch auf eine Decke und zählt die Sterne. Vielleicht seht ihr eine Sternschnuppe!',
+    category: 'Romantik',
   },
   {
     id: '3',
-    title: 'Spaziergang durch die Fürther Altstadt',
-    description: 'Romantischer Spaziergang durch die historische Altstadt mit Cafés und Restaurants',
-    category: 'Entdeckungen',
-  },
-  {
-    id: '4',
-    title: 'Gemeinsames Picknick im Grünen',
-    description: 'Ein schönes Picknick mit leckerem Essen im Park oder am See genießen',
-    category: 'Picknick & Natur',
-  },
-  {
-    id: '5',
-    title: 'Kino-Abend im Fürth Cinemaxx',
-    description: 'Gemütlicher Kinoabend mit euren Lieblings-Snacks',
-    category: 'Unterhaltung',
-  },
-  {
-    id: '6',
-    title: 'Besuch in der Fürther Kunsthalle',
-    description: 'Inspirierende Kunstausstellungen und kulturelle Veranstaltungen',
-    category: 'Kultur',
-  },
-  {
-    id: '7',
-    title: 'Fahrradtour durch Fürth und Umgebung',
-    description: 'Schöne Fahrradstrecken durch Fürth und die nähere Umgebung',
-    category: 'Sport & Outdoor',
-  },
-  {
-    id: '8',
-    title: 'Gemeinsames Kochen & Dinner',
-    description: 'Ein schönes Dinner zusammen kochen und genießen',
+    title: 'Gemeinsamer Kochabend',
+    description: 'Kocht zusammen ein neues Rezept und genießt das Ergebnis.',
     category: 'Zuhause',
   },
   {
-    id: '9',
-    title: 'Besuch auf dem Fürther Wochenmarkt',
-    description: 'Frische Produkte kaufen und das bunte Treiben genießen',
-    category: 'Shopping',
+    id: '4',
+    title: 'Wanderung im Wald',
+    description: 'Erkundet die Natur und tankt frische Luft.',
+    category: 'Abenteuer',
   },
   {
-    id: '10',
-    title: 'Entspanntes Wellness-Erlebnis',
-    description: 'Gemeinsam entspannen und abschalten - Spa oder Massagetermin',
-    category: 'Wellness',
+    id: '5',
+    title: 'Kreativer Malabend',
+    description: 'Malt zusammen ein Bild und lasst eurer Kreativität freien Lauf.',
+    category: 'Kreativität',
   },
 ]
 
 const categoryEmojis: { [key: string]: string } = {
-  'Parks & Natur': '🌳',
-  'Kultur': '🎨',
-  'Entdeckungen': '🗺️',
-  'Picknick & Natur': '🧺',
-  'Unterhaltung': '🎬',
-  'Sport & Outdoor': '🚴',
+  'Natur': '🌳',
+  'Romantik': '💖',
   'Zuhause': '🏠',
-  'Shopping': '🛍️',
-  'Wellness': '🧘',
+  'Abenteuer': '🗺️',
+  'Kreativität': '🎨',
 }
 
 export default function EventSuggestions({ selectedDate }: Props) {
@@ -109,8 +75,8 @@ export default function EventSuggestions({ selectedDate }: Props) {
   return (
     <section className="events-section">
       <div className="section-header">
-        <h2>🎉 Unternehmungs-Ideen für Fürth</h2>
-        <p>Inspirationen für euren nächsten Besuch</p>
+        <h2>🎉 Unternehmungs-Ideen</h2>
+        <p>Inspirationen für eure gemeinsame Zeit</p>
       </div>
 
       <div className="category-filters">

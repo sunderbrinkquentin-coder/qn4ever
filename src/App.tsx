@@ -5,88 +5,20 @@ import LoveMessages from './components/LoveMessages'
 import TopicsBoard from './components/TopicsBoard'
 import NextVisit from './components/NextVisit'
 import EventSuggestions from './components/EventSuggestions'
-
-interface Visit {
-  id: string
-  date: string
-  title: string
-  description: string
-  confirmed: boolean
-}
-
-interface Message {
-  id: string
-  content: string
-  sender: string
-  timestamp: string
-  read: boolean
-}
-
-interface Topic {
-  id: string
-  title: string
-  category: string
-}
+import WeeklyOverview from './components/WeeklyOverview'
 
 function App() {
-  const [visits, setVisits] = useState<Visit[]>([])
-  const [messages, setMessages] = useState<Message[]>([])
-  const [topics, setTopics] = useState<Topic[]>([])
-  const [selectedDate, setSelectedDate] = useState<string>('')
-  const [currentTab, setCurrentTab] = useState<'home' | 'principles' | 'calendar' | 'messages' | 'topics'>('home')
+  const [currentTab, setCurrentTab] = useState<'home' | 'principles' | 'calendar' | 'messages' | 'topics' | 'overview'>('home')
 
-  const handleAddVisit = (visit: Omit<Visit, 'id' | 'confirmed'>) => {
-    const newVisit: Visit = {
-      ...visit,
-      id: Date.now().toString(),
-      confirmed: false,
-    }
-    setVisits([...visits, newVisit].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()))
-  }
-
-  const handleConfirmVisit = (visitId: string) => {
-    setVisits(visits.map(v => v.id === visitId ? { ...v, confirmed: true } : v))
-  }
-
-  const handleAddMessage = (message: Omit<Message, 'id' | 'timestamp'>) => {
-    const newMessage: Message = {
-      ...message,
-      id: Date.now().toString(),
-      timestamp: new Date().toLocaleString('de-DE'),
-    }
-    setMessages([...messages, newMessage])
-  }
-
-  const handleMarkMessageAsRead = (messageId: string) => {
-    setMessages(messages.map(m => m.id === messageId ? { ...m, read: true } : m))
-  }
-
-  const handleAddTopic = (topic: Omit<Topic, 'id'>) => {
-    const newTopic: Topic = {
-      ...topic,
-      id: Date.now().toString(),
-    }
-    setTopics([...topics, newTopic])
-  }
-
-  const handleDeleteTopic = (topicId: string) => {
-    setTopics(topics.filter(t => t.id !== topicId))
-  }
-
-  const handleSelectDate = (date: string) => {
-    setSelectedDate(date)
-    setCurrentTab('calendar')
-  }
-
-  const nextVisit = visits.filter(v => new Date(v.date) >= new Date()).sort((a, b) => 
-    new Date(a.date).getTime() - new Date(b.date).getTime()
-  )[0]
+  const highlights = ['Schöner Spaziergang im Park', 'Gemeinsames Kochen']
+  const challenges = ['Stress bei der Arbeit', 'Wenig Zeit für uns']
+  const support = ['Mehr gemeinsame Zeit planen', 'Unterstützung bei Projekten']
 
   return (
     <div className="app-container">
       <header className="app-header">
         <h1>💕 Unsere Liebe</h1>
-        <p className="app-subtitle">Wir wachsen zusammen</p>
+        <p className="app-subtitle">Quentin & Naima</p>
       </header>
 
       <nav className="app-nav">
@@ -97,10 +29,10 @@ function App() {
           🏠 Startseite
         </button>
         <button 
-          className={`nav-btn ${currentTab === 'principles' ? 'active' : ''}`}
-          onClick={() => setCurrentTab('principles')}
+          className={`nav-btn ${currentTab === 'overview' ? 'active' : ''}`}
+          onClick={() => setCurrentTab('overview')}
         >
-          ✨ Leitlinien
+          📅 Wochenübersicht
         </button>
         <button 
           className={`nav-btn ${currentTab === 'calendar' ? 'active' : ''}`}
@@ -125,42 +57,48 @@ function App() {
       <main className="app-main">
         {currentTab === 'home' && (
           <div className="home-section">
-            <NextVisit visit={nextVisit} />
-            <EventSuggestions selectedDate={selectedDate} />
+            <NextVisit visit={null} />
+            <EventSuggestions selectedDate={''} />
           </div>
         )}
-        
-        {currentTab === 'principles' && (
-          <RelationshipPrinciples />
+
+        {currentTab === 'overview' && (
+          <WeeklyOverview 
+            highlights={highlights} 
+            challenges={challenges} 
+            support={support} 
+          />
         )}
-        
+
         {currentTab === 'calendar' && (
           <VisitCalendar 
-            visits={visits}
-            onAddVisit={handleAddVisit}
-            onConfirmVisit={handleConfirmVisit}
+            visits={[]} 
+            onAddVisit={() => {}} 
+            onConfirmVisit={() => {}} 
           />
         )}
-        
+
         {currentTab === 'messages' && (
           <LoveMessages 
-            messages={messages}
-            onAddMessage={handleAddMessage}
-            onMarkAsRead={handleMarkMessageAsRead}
+            messages={[]} 
+            onAddMessage={() => {}} 
+            onMarkAsRead={() => {}} 
+            currentUser="Quentin" 
+            partnerName="Naima" 
           />
         )}
-        
+
         {currentTab === 'topics' && (
           <TopicsBoard 
-            topics={topics}
-            onAddTopic={handleAddTopic}
-            onDeleteTopic={handleDeleteTopic}
+            topics={[]} 
+            onAddTopic={() => {}} 
+            onDeleteTopic={() => {}} 
           />
         )}
       </main>
 
       <footer className="app-footer">
-        <p>Gebaut mit ❤️ für unsere Liebe</p>
+        <p>Gebaut mit ❤️ für Quentin & Naima</p>
       </footer>
     </div>
   )
