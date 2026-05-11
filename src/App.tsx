@@ -52,6 +52,12 @@ function App() {
         >
           📝 Themen
         </button>
+        <button 
+  className={`nav-btn ${currentTab === 'principles' ? 'active' : ''}`}
+  onClick={() => setCurrentTab('principles')}
+>
+  📜 Leitlinien
+</button>
       </nav>
 
       <main className="app-main">
@@ -96,6 +102,12 @@ function App() {
           />
         )}
       </main>
+      {currentTab === 'principles' && (
+  <RelationshipPrinciples 
+    principles={[]} 
+    onAddPrinciple={() => {}} 
+  />
+)}
 
       <footer className="app-footer">
         <p>Gebaut mit ❤️ für Quentin & Naima</p>
