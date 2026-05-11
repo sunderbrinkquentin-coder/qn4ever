@@ -1,0 +1,215 @@
+import { useState } from 'react'
+
+interface Visit {
+  id: string
+  date: string
+  title: string
+  description: string
+  duration: string
+  confirmed: boolean
+  proposedChanges?: {
+    date?: string
+    title?: string
+    description?: string
+    duration?: string
+  }
+}
+
+interface Props {
+  visits: Visit[]
+  onAddVisit: (visit: Omit<Visit, 'id' | 'confirmed'>) => void
+  onConfirmVisit: (visitId: string) => void
+  onProposeChange: (visitId: string, changes: Partial<Visit>) => void
+}
+
+export default function VisitCalendar({ visits, onAddVisit, onConfirmVisit, onProposeChange }: Props) {
+  const [formData, setFormData] = useState({ date: '', title: '', description: '', duration: '' })
+  const [showForm, setShowForm] = useState(false)
+  const [proposedChanges, setProposedChanges] = useState<Partial<Visit>>({})
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (formData.date && formData.title && formData.duration) {
+      onAddVisit(formData)
+      setFormData({ date: '', title: '', description: '', duration: '' })
+      setShowForm(false)
+    }
+  }
+
+  const handleProposeChange = (visitId: string) => {
+    onProposeChange(visitId, proposedChanges)
+    setProposedChanges({})
+  }
+
+  const sortedVisits = [...visits].sort((a, b) => 
+    new Date(a.date).getTime() - new Date(b.date).getTime()
+  )
+
+  const upcomingVisits = sortedVisits.filter(v => new Date(v.date) >= new Date())
+  const pastVisits = sortedVisits.filter(v => new Date(v.date) < new Date())
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('de-DE', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+  }
+
+  return (
+    <section className="calendar-section">
+      <div className="section-header">
+        <h2>📅 Unsere Termine & Besuche</h2>
+        <p>Momente zusammen festhalten</p>
+      </div>
+
+      <button className="add-btn primary-btn" onClick={() => setShowForm(!showForm)}>
+        {showForm ? '✕ Abbrechen' : '+ Neuen Termin hinzufügen'}
+      </button>
+
+      {showForm && (
+        <form onSubmit={handleSubmit} className="calendar-form form-card">
+          <div className="form-group">
+            <label>📅 Datum</label>
+            <input
+              type="date"
+              value={formData.date}
+              onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>💑 Titel des Besuchs / Dates</label>
+            <input
+              type="text"
+              placeholder="z.B. Besuch in Stuttgart, gemeinsames Dinner..."
+              value={formData.title}
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>⏳ Dauer (z.B. 2 Stunden, 1 Tag)</label>
+            <input
+              type="text"
+              placeholder="z.B. 2 Stunden, 1 Tag"
+              value={formData.duration}
+              onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>✍️ Beschreibung</label>
+            <textarea
+              placeholder="Was wir machen wollen, Pläne, besondere Wünsche..."
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              rows={3}
+            ></textarea>
+          </div>
+
+          <button type="submit" className="submit-btn">Termin speichern</button>
+        </form>
+      )}
+
+      <div className="visits-container">
+        {upcomingVisits.length > 0 && (
+          <div className="visits-group">
+            <h3 className="group-title">🔜 Kommende Termine</h3>
+            <div className="visits-list">
+              {upcomingVisits.map((visit) => (
+                <div key={visit.id} className={`visit-card ${visit.confirmed ? 'confirmed' : 'pending'}`}>
+                  <div className="visit-header">
+                    <h4>{visit.title}</h4>
+                    <span className={`status-badge ${visit.confirmed ? 'confirmed' : 'pending'}`}>
+                      {visit.confirmed ? '✓ Bestätigt' : '⏳ Ausstehend'}
+                    </span>
+                  </div>
+                  <p className="visit-date">📅 {formatDate(visit.date)}</p>
+                  <p className="visit-duration">⏳ {visit.duration}</p>
+                  {visit.description && <p className="visit-description">{visit.description}</p>}
+
+                  {visit.proposedChanges && (
+                    <div className="proposed-changes">
+                      <h5>Änderungsvorschläge:</h5>
+                      {visit.proposedChanges.date && <p>📅 Neues Datum: {formatDate(visit.proposedChanges.date)}</p>}
+                      {visit.proposedChanges.title && <p>💑 Neuer Titel: {visit.proposedChanges.title}</p>}
+                      {visit.proposedChanges.description && <p>✍️ Neue Beschreibung: {visit.proposedChanges.description}</p>}
+                      {visit.proposedChanges.duration && <p>⏳ Neue Dauer: {visit.proposedChanges.duration}</p>}
+                    </div>
+                  )}
+
+                  <div className="propose-change-form">
+                    <h5>Änderung vorschlagen:</h5>
+                    <input
+                      type="text"
+                      placeholder="Neuer Titel"
+                      value={proposedChanges.title || ''}
+                      onChange={(e) => setProposedChanges({ ...proposedChanges, title: e.target.value })}
+                    />
+                    <input
+                      type="date"
+                      value={proposedChanges.date || ''}
+                      onChange={(e) => setProposedChanges({ ...proposedChanges, date: e.target.value })}
+                    />
+                    <textarea
+                      placeholder="Neue Beschreibung"
+                      value={proposedChanges.description || ''}
+                      onChange={(e) => setProposedChanges({ ...proposedChanges, description: e.target.value })}
+                    ></textarea>
+                    <input
+                      type="text"
+                      placeholder="Neue Dauer"
+                      value={proposedChanges.duration || ''}
+                      onChange={(e) => setProposedChanges({ ...proposedChanges, duration: e.target.value })}
+                    />
+                    <button onClick={() => handleProposeChange(visit.id)}>Vorschlag senden</button>
+                  </div>
+
+                  {!visit.confirmed && (
+                    <button
+                      className="confirm-btn"
+                      onClick={() => onConfirmVisit(visit.id)}
+                    >
+                      ✓ Bestätigen
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {pastVisits.length > 0 && (
+          <div className="visits-group">
+            <h3 className="group-title">📸 Vergangene Momente</h3>
+            <div className="visits-list">
+              {pastVisits.map((visit) => (
+                <div key={visit.id} className="visit-card past">
+                  <div className="visit-header">
+                    <h4>{visit.title}</h4>
+                    <span className="status-badge past">✓ Vollendet</span>
+                  </div>
+                  <p className="visit-date">📅 {formatDate(visit.date)}</p>
+                  <p className="visit-duration">⏳ {visit.duration}</p>
+                  {visit.description && <p className="visit-description">{visit.description}</p>}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {visits.length === 0 && !showForm && (
+          <div className="empty-state">
+            <p>Noch keine Termine geplant...</p>
+            <p className="empty-hint">Erstellt den ersten gemeinsamen Termin! 💕</p>
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}
