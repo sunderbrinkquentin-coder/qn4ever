@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+interface Props {}
+
 const principles = [
   { icon: '💬', title: 'Vollständigkeit', desc: 'Wir erzählen uns alles (Gutes wie Schwieriges)' },
   { icon: '🗺️', title: 'Gemeinsame Abenteuer', desc: 'Wir planen gemeinsame Ausflüge und Urlaube' },
@@ -9,42 +11,28 @@ const principles = [
   { icon: '🤝', title: 'Gegenseitige Unterstützung', desc: 'Wir unterstützen uns gegenseitig und sind füreinander Priorität 1' },
   { icon: '🗣️', title: 'Offene Kommunikation', desc: 'Wenn etwas nicht passt, sprechen wir es direkt an' },
   { icon: '🔍', title: 'Lösungsorientierung', desc: 'Wir suchen Lösungen statt Fehler' },
-  { icon: '👥', title: 'Gegenseitiger Respekt', desc: 'Gegenseitiger Respekt' },
+  { icon: '👥', title: 'Gegenseitiger Respekt', desc: 'Gegenseitiger Respekt ist das Fundament' },
   { icon: '⚖️', title: 'Gleichberechtigung', desc: 'Jede Meinung zählt gleich viel' },
-  { icon: '⏸️', title: 'Raum für Individualität', desc: 'Zeit für sich ist in Ordnung' },
+  { icon: '⏸️', title: 'Raum für Individualität', desc: 'Zeit für sich ist in Ordnung und wichtig' },
   { icon: '👂', title: 'Aktives Zuhören', desc: 'Wir hören einander zu, auch bei kleinen Sorgen' },
-  { icon: '🔒', title: 'Vertrauen', desc: 'Vertrauen ist die Basis' },
+  { icon: '🔒', title: 'Vertrauen', desc: 'Vertrauen ist die Basis unserer Beziehung' },
 ]
 
-export default function RelationshipPrinciples() {
-  const [expandedId, setExpandedId] = useState<number | null>(null)
-
+export default function RelationshipPrinciples({}: Props) {
   return (
     <section className="principles-section">
       <div className="section-header">
         <h2>✨ Unsere Leitlinien</h2>
         <p>Die Fundamente unserer wunderschönen Beziehung</p>
       </div>
-
       <div className="principles-grid">
-        {principles.map((principle, index) => (
-          <div
-            key={index}
-            className={`principle-card ${expandedId === index ? 'expanded' : ''}`}
-            onClick={() => setExpandedId(expandedId === index ? null : index)}
-          >
-            <div className="principle-icon">{principle.icon}</div>
-            <h3 className="principle-title">{principle.title}</h3>
-            <p className="principle-description">{principle.desc}</p>
+        {principles.map((p, idx) => (
+          <div key={idx} className="principle-card" onClick={(e) => (e.currentTarget as HTMLElement).classList.toggle('expanded')}>
+            <div className="principle-icon">{p.icon}</div>
+            <h3 className="principle-title">{p.title}</h3>
+            <p className="principle-description">{p.desc}</p>
           </div>
         ))}
-      </div>
-
-      <div className="principles-footer">
-        <p className="warm-message">
-          Diese Leitlinien bilden das Fundament unserer Liebe. Gemeinsam schaffen wir einen Raum 
-          der Authentizität, des Vertrauens und der gegenseitigen Unterstützung. 💕
-        </p>
       </div>
     </section>
   )
