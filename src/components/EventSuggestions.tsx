@@ -87,7 +87,7 @@ export default function EventSuggestions({ selectedDate }: Props) {
   useEffect(() => {
     const categories = [...new Set(suggestedEvents.map(e => e.category))]
     const randomCategory = categories[Math.floor(Math.random() * categories.length)]
-    setSuggestedCategory(randomCategory)
+    if (randomCategory) setSuggestedCategory(randomCategory)
   }, [selectedDate])
 
   useEffect(() => {
