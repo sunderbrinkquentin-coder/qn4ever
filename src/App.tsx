@@ -13,7 +13,14 @@ interface Visit {
   date: string
   title: string
   description: string
+  duration: string
   confirmed: boolean
+  proposedChanges?: {
+    date?: string
+    title?: string
+    description?: string
+    duration?: string
+  }
   createdBy?: string
   createdAt?: string
 }
@@ -72,6 +79,7 @@ function App() {
     const newVisit: Visit = {
       ...visit,
       id: Date.now().toString(),
+      duration: visit.duration || '',
       confirmed: false,
       createdBy: 'Quentin',
       createdAt: new Date().toISOString()
