@@ -97,7 +97,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -126,18 +126,6 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "README.md",
-              "DocumentMoniker": "C:\\Users\\sunde\\source\\repos\\sunderbrinkquentin-coder\\qn4ever\\README.md",
-              "RelativeDocumentMoniker": "README.md",
-              "ToolTip": "C:\\Users\\sunde\\source\\repos\\sunderbrinkquentin-coder\\qn4ever\\README.md",
-              "RelativeToolTip": "README.md",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAD0AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2026-05-10T18:30:21.343Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 19,
               "Title": "WeeklyOverview.tsx",
               "DocumentMoniker": "C:\\Users\\sunde\\source\\repos\\sunderbrinkquentin-coder\\qn4ever\\src\\components\\WeeklyOverview.tsx",
@@ -160,6 +148,18 @@
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
               "WhenOpened": "2026-05-14T07:24:05.105Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "README.md",
+              "DocumentMoniker": "C:\\Users\\sunde\\source\\repos\\sunderbrinkquentin-coder\\qn4ever\\README.md",
+              "RelativeDocumentMoniker": "README.md",
+              "ToolTip": "C:\\Users\\sunde\\source\\repos\\sunderbrinkquentin-coder\\qn4ever\\README.md",
+              "RelativeToolTip": "README.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAD0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-05-10T18:30:21.343Z"
             },
             {
               "$type": "Document",

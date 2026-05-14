@@ -2,19 +2,29 @@
   "name": "qn4ever",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite",
     "build": "vite build",
+    "preview": "vite preview",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "tsc --build --clean"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "@supabase/supabase-js": "^2.45.0"
+  },
   "devDependencies": {
-    "@types/node": "^25.6.2",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.2.11",
+    "typescript": "^6.0.3",
     "eslint": "^10.3.0",
-    "typescript": "^6.0.3"
+    "@types/node": "^25.6.2"
   }
 }
